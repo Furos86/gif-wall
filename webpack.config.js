@@ -40,12 +40,10 @@ module.exports = {
       }]
     }]
   },
-
+  devtool: 'source-map',
   devServer: {
     open: true,
     host: 'localhost',
-    contentBase:'./src/frontend',
-    port:3000,
-    historyApiFallback: true
+    port:3000
   }
 }
