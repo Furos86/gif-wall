@@ -1,5 +1,3 @@
-import './uploadStyle.css'
-
 export default class UploadManager {
     drop
     constructor() {
