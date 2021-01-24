@@ -1,6 +1,9 @@
-import {db} from '../models'
-
 export default class GifEntitiesService {
+    database
+
+    constructor(databaseService) {
+        this.database = databaseService;
+    }
 
     Create() {
         //creates a gif entity

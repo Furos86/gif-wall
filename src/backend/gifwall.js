@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser'
 import * as path from 'path';
-import WebSocket from 'ws';
-import {db} from './models';
+import WebSocket from 'ws'
+import DatabaseService from './services/databaseService'
 import GifEntitiesService from './services/gifEntitiesService';
 import Routes from './routes/routes';
 
@@ -14,17 +14,14 @@ export default class gifWall {
     }
 
     async Start(port) {
+        const databaseService = new DatabaseService();
+        const gifEntityService = new GifEntitiesService(databaseService);
 
-        const sequelize = db.sequelize;
-        try {
-            await db.createDatabase();
-            await sequelize.authenticate();
-            await sequelize.sync();
-        } catch(error) {
-            throw error;
+        try{
+            await databaseService.start();
+        } catch (error) {
+            console.log(error);
         }
-
-        const gifEntityService = new GifEntitiesService();
 
         this.app.listen(port);
         this.app.use(cors());
