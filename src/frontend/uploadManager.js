@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {createElement} from './utils/domUtils';
 
 export default class UploadManager {
     isLocked
@@ -9,8 +10,7 @@ export default class UploadManager {
         this.isLocked = false;
         window.addEventListener('dragenter', this.dragEnterEvent);
 
-        this.dropBox = document.createElement('input');
-        this.dropBox.id = 'dropbox';
+        this.dropBox = createElement('input', 'dropbox');
         this.dropBox.type = 'file';
         document.body.appendChild(this.dropBox);
         this.dropBox.addEventListener('drop', this.dropEvent);
