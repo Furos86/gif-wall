@@ -6,7 +6,6 @@ import WebSocket from 'ws';
 import {db} from './models';
 import GifEntitiesService from './services/gifEntitiesService';
 import Routes from './routes/routes';
-import multer from 'multer';
 
 export default class gifWall {
     app
@@ -30,7 +29,6 @@ export default class gifWall {
         this.app.listen(port);
         this.app.use(cors());
         this.app.use(bodyParser.json({limit: '1mb'}));
-        this.app.use(multer().array('file'));
         this.app.use('/', express.static(path.join(__dirname, 'static')));
 
         this.app.use(new Routes(gifEntityService).router)

@@ -4,6 +4,8 @@ export default class Controller {
         this.gifEntityService = gifEntityService;
     }
     Upload = async (request, response) => {
+        const data = request.body;
         const file = request.files;
+        response.send('got it!');
     }
 }

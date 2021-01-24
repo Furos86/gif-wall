@@ -44,6 +44,11 @@ module.exports = {
   devServer: {
     open: true,
     host: 'localhost',
-    port:3000
+    port:3000,
+    proxy:{
+      '/upload': {
+        target:'http://localhost:80'
+      }
+    }
   }
 }

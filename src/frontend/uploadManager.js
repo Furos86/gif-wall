@@ -1,24 +1,36 @@
+import axios from 'axios';
+
 export default class UploadManager {
-    drop
-    constructor() {
-        window.addEventListener('dragenter', this.dragEnterEvent)
+    isLocked
+    dropBox
+    gifEntityManager
+    constructor(gifEntityManager) {
+        this.gifEntityManager = gifEntityManager;
+        this.isLocked = false;
+        window.addEventListener('dragenter', this.dragEnterEvent);
 
-        const el = document.createElement('input')
-        el.id = 'test'
-        el.type = 'file'
-        document.body.appendChild(el);
+        this.dropBox = document.createElement('input');
+        this.dropBox.id = 'dropbox';
+        this.dropBox.type = 'file';
+        document.body.appendChild(this.dropBox);
+        this.dropBox.addEventListener('drop', this.dropEvent);
+        this.dropBox.style.display = 'none';
 
-        el.addEventListener('drop', this.dropEvent)
-        el.style.display = 'none';
-        this.drop = el;
+        this.dropBox.addEventListener('dragleave', this.dragExitEvent);
     }
 
-    dragEnterEvent = (event) => {
-        console.log('enterDetection:', event);
-        this.drop.style.display = 'block';
+    dragEnterEvent = () => {
+        this.showDropBox();
+    }
+
+    dragExitEvent = () => {
+        if(this.isLocked) return;
+        this.hideDropBox();
     }
 
     dropEvent = async (event) => {
+        if(this.isLocked) return;
+        this.isLocked = true;
         event.stopPropagation();
         event.preventDefault();
 
@@ -27,10 +39,23 @@ export default class UploadManager {
         const file = files[0];
         const form = new FormData();
         form.append('file', file);
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://localhost/upload", true);
-        xhr.send(form);
-        this.drop.style.display = 'none';
-        console.log('hide');
+        const parsedPosition = JSON.stringify(this.gifEntityManager.center);
+        form.append('position', parsedPosition);
+        try {
+            const response = await axios.post('/upload',form);
+            //TODO handle response hashes
+        } catch (error) {
+            console.log(error);
+        }
+        this.hideDropBox();
+        this.isLocked = false;
+    }
+
+    showDropBox() {
+        this.dropBox.style.display = 'block';
+    }
+
+    hideDropBox() {
+        this.dropBox.style.display = 'none';
     }
 }
