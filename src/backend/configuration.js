@@ -6,4 +6,5 @@ export default class Configuration {
     static databasePassword = get('DATABASE_PASSWD').default('password').asString();
     static databaseUser = get('DATABASE_USER').default('root').asString();
     static makeDatabase = get('MAKE_DATABASE').default("false").asBool();
+    static localFileStoreLocation = get('FILE_STORE_LOCATION').default('/file_store').asString();
 }

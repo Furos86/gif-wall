@@ -6,6 +6,7 @@ import WebSocket from 'ws'
 import DatabaseService from './services/databaseService'
 import GifEntitiesService from './services/gifEntitiesService';
 import Routes from './routes/routes';
+import FileStoreService from './services/fileStoreService';
 
 export default class gifWall {
     app
@@ -14,8 +15,9 @@ export default class gifWall {
     }
 
     async Start(port) {
+        const fileStoreService = new FileStoreService();
         const databaseService = new DatabaseService();
-        const gifEntityService = new GifEntitiesService(databaseService);
+        const gifEntityService = new GifEntitiesService(databaseService, fileStoreService);
 
         try{
             await databaseService.start();

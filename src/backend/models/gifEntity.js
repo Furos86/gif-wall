@@ -19,7 +19,7 @@ export function GifEntityFactory(sequelize) {
             type:DataTypes.INTEGER,
             defaultValue:0
         },
-        layer:{
+        z:{
             type:DataTypes.INTEGER,
             defaultValue:0
         }

@@ -7,12 +7,14 @@ export default class GifEntity {
     _position = {x:0, y:0};
     _dragOffset = {x:0, y:0};
     constructor(gifEntityData) {
-        this.id = gifEntityData.id;
+        this.id = gifEntityData.hash;
         this.domElement = createElement('div', '')
         this.domElement.classList.add('gif-entity')
         const bgColor = Math.floor(Math.random()*16777215).toString(16);
         this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;
+
+        this.domElement.innerHTML = this.id;
     }
 
     set position(value) {

@@ -44,6 +44,7 @@ export default class UploadManager {
         try {
             const response = await axios.post('/upload',form);
             //TODO handle response hashes
+            this.gifEntityManager.addGifEntity({hash:response.data.hash, position:this.gifEntityManager.center})
         } catch (error) {
             console.log(error);
         }
