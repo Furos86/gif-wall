@@ -1,9 +1,10 @@
-import {createElement} from '../utils/domUtils';
+import {createElement, ImagePromise} from '../utils/domUtils';
 
 export default class ImageEntity {
     domElement;
     id;
-    imageContainer;
+    _size = {width:0, height:0};
+    _scale = {width:1, height:1};
 
     _position = {x:0, y:0};
     _dragOffset = {x:0, y:0};
@@ -14,21 +15,49 @@ export default class ImageEntity {
         const bgColor = Math.floor(Math.random()*16777215).toString(16);
         this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;
+    }
 
-        this.imageContainer = createElement('img')
-        this.imageContainer.src = `/image/${this.id}`;
-        this.domElement.appendChild(this.imageContainer);
+    Load = async() => {
+        let image;
+        try {
+            image = await ImagePromise(`/image/${this.id}`);
+        } catch(error) {
+            console.log(error)
+        }
+        this.domElement.style.backgroundImage = `url(${image.src})`;
+        this.size = {width:image.width, height:image.height};
+        this.show();
     }
 
     set position(value) {
         this._position = value;
         this.domElement.style.top = this._position.y + 'px';
         this.domElement.style.left = this._position.x + 'px';
-
     }
 
     get position() {
         return this._position;
+    }
+
+    set size(newSize) {
+        this._size = newSize;
+        this.updateAbsoluteSize();
+    }
+
+    set scale(newScale) {
+        this._scale = newScale;
+        this.updateAbsoluteSize();
+    }
+
+    updateAbsoluteSize() {
+        const absoluteWidth = this._size.width * this._scale.width;
+        const absoluteHeight = this._size.height * this._scale.height;
+        this.domElement.style.width = `${absoluteWidth}px`
+        this.domElement.style.height = `${absoluteHeight}px`
+    }
+
+    show() {
+        this.domElement.style.opacity = '1';
     }
 
     startDrag = (event) => {

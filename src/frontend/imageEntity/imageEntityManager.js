@@ -16,11 +16,12 @@ export default class ImageEntityManager {
 
     }
 
-    addGifEntity(gifEntityData) {
+   async addGifEntity(gifEntityData) {
         const entity = new ImageEntity(gifEntityData);
         this.entities.set(entity.fileHash, entity);
         this.domContainer.prepend(entity.domElement);
         entity.position = gifEntityData.position;
+        await entity.Load();
     }
 
     calculatePlacementCenter() {

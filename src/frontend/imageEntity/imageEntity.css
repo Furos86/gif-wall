@@ -4,6 +4,8 @@
 
 .image-entity {
     position: absolute;
-    width:100px;
-    height:100px;
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+    transition: opacity .5s linear;
 }
