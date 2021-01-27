@@ -4,41 +4,6 @@ import Configuration from '../configuration'
 import {GifEntityFactory} from '../models/gifEntity';
 import {sleep} from '../utils/sleep';
 
-/*const sequelize = new Sequelize({
-    host:Configuration.databaseHost,
-    dialect:'mysql',
-    password: Configuration.databasePassword,
-    username: Configuration.databaseUser,
-    database:Configuration.database
-})
-
-const GifEntity = GifEntityFactory(sequelize);
-
-const createDatabase = async() => {
-    if(!Configuration.makeDatabase) return;
-    return new Promise((resolve, reject) => {
-        const connection = mysql.createConnection({
-            host: Configuration.host,
-            port: 3306,
-            password: Configuration.databasePassword,
-            user: Configuration.databaseUser
-        })
-        connection.connect((error) =>{
-            if(error) reject(error);
-            connection.query(`CREATE DATABASE IF NOT EXISTS \`${Configuration.database}\`;`, (error, result) =>{
-                if(error) reject(error);
-                if(result) resolve();
-            });
-        });
-    })
-}
-
-export const db = {
-    sequelize:sequelize,
-    createDatabase:createDatabase,
-    GifEntity:GifEntity
-}*/
-
 export default class DatabaseService {
     sequelize
     models = {
@@ -47,32 +12,7 @@ export default class DatabaseService {
 
     async start() {
         await this.waitForConnection();
-        await this.createDatabase();
-        this.models.GifEntity = GifEntityFactory(this.sequelize);
 
-        this.sequelize.sync();
-    }
-
-    async createDatabase () {
-        if (!Configuration.makeDatabase) return;
-        return new Promise((resolve, reject) => {
-            const connection = mysql.createConnection({
-                host: Configuration.host,
-                port: 3306,
-                password: Configuration.databasePassword,
-                user: Configuration.databaseUser
-            })
-            connection.connect((error) => {
-                if (error) reject(error);
-                connection.query(`CREATE DATABASE IF NOT EXISTS \`${Configuration.database}\`;`, (error, result) => {
-                    if (error) reject(error);
-                    if (result) resolve();
-                });
-            });
-        })
-    }
-
-    async waitForConnection() {
         this.sequelize = await new Sequelize({
             host: Configuration.databaseHost,
             dialect: 'mysql',
@@ -80,15 +20,35 @@ export default class DatabaseService {
             username: Configuration.databaseUser,
             database: Configuration.database
         })
+
+        this.models.GifEntity = GifEntityFactory(this.sequelize);
+
+        this.sequelize.sync();
+    }
+
+    async waitForConnection() {
         let isConnected = false;
+
+        const db = mysql.createConnection({
+            host: Configuration.host,
+            port: 3306,
+            password: Configuration.databasePassword,
+            user: Configuration.databaseUser
+        })
+
+        db.connect((error) => {
+            if(!error) isConnected = true;
+        })
+
         while(!isConnected) {
-            try {
-                await this.sequelize.authenticate();
-                isConnected = true;
-            } catch (error) {
-                console.log(`database server not responding`)
-                await sleep(500)
-            }
+            console.log(`connecting to database`);
+            await sleep(500);
         }
+
+        if(!Configuration.makeDatabase) return;
+        db.query(`CREATE DATABASE IF NOT EXISTS \`${Configuration.database}\`;`, (error) => {
+            if(error) throw error;
+        });
+
     }
 }
