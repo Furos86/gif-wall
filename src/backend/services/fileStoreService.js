@@ -14,6 +14,10 @@ export default class FileStoreService {
 
     }
     async Store(id, file) {
-        await fsPromises.writeFile(path.join(this.directory, id),file, {encoding:'binary'});
+        await fsPromises.writeFile(path.join(this.directory, id),file);
+    }
+
+    async retrieve(id) {
+        return await fsPromises.readFile(path.join(this.directory, id));
     }
 }

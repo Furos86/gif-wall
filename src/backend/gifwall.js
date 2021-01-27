@@ -30,7 +30,7 @@ export default class gifWall {
         this.app.use(bodyParser.json({limit: '1mb'}));
         this.app.use('/', express.static(path.join(__dirname, 'static')));
 
-        this.app.use(new Routes(gifEntityService).router)
+        this.app.use(new Routes(gifEntityService, fileStoreService).router)
 
         let wss = new WebSocket.Server({port: 8080});
         wss.on('connection', (ws) => {

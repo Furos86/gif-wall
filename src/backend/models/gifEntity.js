@@ -7,9 +7,8 @@ export function GifEntityFactory(sequelize) {
             primaryKey:true,
             autoIncrement:true,
         },
-        hash: {
+        fileHash: {
             type:DataTypes.STRING,
-            unique:true
         },
         x:{
             type:DataTypes.INTEGER,
