@@ -48,6 +48,9 @@ module.exports = {
     proxy:{
       '/upload': {
         target:'http://localhost:80'
+      },
+      '/image': {
+        target:'http://localhost:80'
       }
     }
   }

@@ -16,14 +16,14 @@ export default class GifEntityManager {
 
     }
 
-    addGifEntity = (gifEntityData) => {
+    addGifEntity(gifEntityData) {
         const entity = new GifEntity(gifEntityData);
-        this.entities.set(entity.id, entity);
+        this.entities.set(entity.fileHash, entity);
         this.domContainer.prepend(entity.domElement);
         entity.position = gifEntityData.position;
     }
 
-    calculatePlacementCenter = () => {
+    calculatePlacementCenter() {
         const containerPosX = this.domContainer.offsetLeft;
         const containerPosY = this.domContainer.offsetTop;
         const x = containerPosX + Math.floor(window.innerWidth/2);
