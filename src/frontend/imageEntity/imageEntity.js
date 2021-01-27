@@ -1,6 +1,6 @@
 import {createElement} from '../utils/domUtils';
 
-export default class GifEntity {
+export default class ImageEntity {
     domElement;
     id;
     imageContainer;
@@ -10,7 +10,7 @@ export default class GifEntity {
     constructor(gifEntityData) {
         this.id = gifEntityData.fileHash;
         this.domElement = createElement('div', '')
-        this.domElement.classList.add('gif-entity')
+        this.domElement.classList.add('image-entity')
         const bgColor = Math.floor(Math.random()*16777215).toString(16);
         this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;

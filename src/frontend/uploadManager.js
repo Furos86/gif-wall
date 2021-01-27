@@ -5,8 +5,8 @@ export default class UploadManager {
     isLocked
     dropBox
     gifEntityManager
-    constructor(gifEntityManager) {
-        this.gifEntityManager = gifEntityManager;
+    constructor(imageEntityManager) {
+        this.gifEntityManager = imageEntityManager;
         this.isLocked = false;
         window.addEventListener('dragenter', this.dragEnterEvent);
 

@@ -1,15 +1,15 @@
-import './gifEntity.css';
+import './imageEntity.css';
 import {createElement} from '../utils/domUtils';
-import GifEntity from './gifEntity';
+import ImageEntity from './imageEntity';
 
-export default class GifEntityManager {
+export default class ImageEntityManager {
     center
     domContainer
     entities
     constructor() {
         this.entities = new Map();
         this.center = {x:0, y:0}
-        this.domContainer = createElement('div', 'gif-entity-container');
+        this.domContainer = createElement('div', 'image-entity-container');
         document.body.append(this.domContainer);
         this.calculatePlacementCenter();
         console.log(this.center);
@@ -17,7 +17,7 @@ export default class GifEntityManager {
     }
 
     addGifEntity(gifEntityData) {
-        const entity = new GifEntity(gifEntityData);
+        const entity = new ImageEntity(gifEntityData);
         this.entities.set(entity.fileHash, entity);
         this.domContainer.prepend(entity.domElement);
         entity.position = gifEntityData.position;

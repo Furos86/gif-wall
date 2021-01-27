@@ -1,7 +1,7 @@
 import {DataTypes} from 'sequelize';
 
-export function GifEntityFactory(sequelize) {
-    return sequelize.define('gifEntity', {
+export function ImageEntityFactory(sequelize) {
+    return sequelize.define('imageEntity', {
         id:{
             type:DataTypes.INTEGER,
             primaryKey:true,

@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-export default class GifEntitiesService {
+export default class ImageEntitiesService {
     database
     fileStore
 
@@ -12,21 +12,21 @@ export default class GifEntitiesService {
         //creates a gif entity
         const hash = this.generateHash(file.buffer);
         const storeFile = await this.HashExists(hash);
-        const gifEntity = this.database.models.GifEntity.build({
+        const imageEntity = this.database.models.ImageEntity.build({
             fileHash:hash,
             x:position.x,
             y:position.y,
             z:0
         })
         try {
-            await gifEntity.save();
+            await imageEntity.save();
         }catch(error) {
             console.log(error)
         }
         if(storeFile) await this.fileStore.Store(hash, file.buffer);
         //after create, emit update event
 
-        return gifEntity.fileHash;
+        return imageEntity.fileHash;
     }
 
     Remove() {
@@ -43,7 +43,7 @@ export default class GifEntitiesService {
     }
 
     async HashExists(hash) {
-        const data = await this.database.models.GifEntity.findOne({
+        const data = await this.database.models.ImageEntity.findOne({
             where: {
                 fileHash:hash
             }

@@ -4,7 +4,7 @@ import bodyParser from 'body-parser'
 import * as path from 'path';
 import WebSocket from 'ws'
 import DatabaseService from './services/databaseService'
-import GifEntitiesService from './services/gifEntitiesService';
+import ImageEntitiesService from './services/imageEntitiesService';
 import Routes from './routes/routes';
 import FileStoreService from './services/fileStoreService';
 
@@ -17,7 +17,7 @@ export default class gifWall {
     async Start(port) {
         const fileStoreService = new FileStoreService();
         const databaseService = new DatabaseService();
-        const gifEntityService = new GifEntitiesService(databaseService, fileStoreService);
+        const gifEntityService = new ImageEntitiesService(databaseService, fileStoreService);
 
         try{
             await databaseService.start();

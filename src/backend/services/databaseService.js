@@ -1,13 +1,13 @@
 import {Sequelize} from 'sequelize';
 import mysql from 'mysql2'
 import Configuration from '../configuration'
-import {GifEntityFactory} from '../models/gifEntity';
+import {ImageEntityFactory} from '../models/imageEntity';
 import {sleep} from '../utils/sleep';
 
 export default class DatabaseService {
     sequelize
     models = {
-        GifEntity:null
+        ImageEntity:null
     }
 
     async start() {
@@ -21,7 +21,7 @@ export default class DatabaseService {
             database: Configuration.database
         })
 
-        this.models.GifEntity = GifEntityFactory(this.sequelize);
+        this.models.ImageEntity = ImageEntityFactory(this.sequelize);
 
         this.sequelize.sync();
     }

@@ -1,8 +1,8 @@
-#gif-entity-container {
+#image-entity-container {
     position: absolute;
 }
 
-.gif-entity {
+.image-entity {
     position: absolute;
     width:100px;
     height:100px;
