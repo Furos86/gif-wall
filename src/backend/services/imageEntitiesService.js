@@ -51,8 +51,23 @@ export default class ImageEntitiesService {
         return data === null;
     }
 
-    EntitiesInArea() {
+    EntitiesInArea(position, areaSize) {
         //retrieves all entities within area on all layers
+    }
+
+    async AllEntities() {
+        let data
+        try {
+            data = await this.database.models.ImageEntity.findAll({
+                raw: true,
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
+        return data;
     }
 
     generateHash = (file) => crypto.createHash('md5').update(file).digest('hex');

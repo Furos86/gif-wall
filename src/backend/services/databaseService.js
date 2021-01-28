@@ -26,6 +26,8 @@ export default class DatabaseService {
         this.sequelize.sync();
     }
 
+
+
     async waitForConnection() {
         let isConnected = false;
 

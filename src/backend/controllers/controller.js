@@ -1,15 +1,20 @@
 export default class Controller {
-    gifEntityService
+    imageEntityService
     fileStoreService
     constructor(gifEntityService, fileStoreService) {
-        this.gifEntityService = gifEntityService;
+        this.imageEntityService = gifEntityService;
         this.fileStoreService = fileStoreService;
     }
     Upload = async (request, response) => {
         const position = JSON.parse(request.body.position);
         const file = request.files[0];
-        const hash = await this.gifEntityService.Create(position, file);
+        const hash = await this.imageEntityService.Create(position, file);
         response.json({hash:hash})
+    }
+
+    Entities = async(request, response) => {
+        const data = await this.imageEntityService.AllEntities();
+        response.send(data);
     }
 
     Image = async(request, response) => {
