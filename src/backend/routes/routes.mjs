@@ -1,11 +1,10 @@
 import multer from 'multer'
 
 import {Router} from 'express';
-import Controller from '../controllers/controller';
-import {asyncHandler} from '../utils/asyncHandler'
+import Controller from '../controllers/controller.mjs';
+import {asyncHandler} from '../utils/asyncHandler.mjs'
 
 export default class Routes {
-    router;
 
     constructor(gifEntityService, fileStoreService) {
         this.router = new Router();

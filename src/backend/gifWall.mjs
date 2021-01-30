@@ -1,15 +1,18 @@
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser'
-import * as path from 'path';
-import WebSocket from 'ws'
-import DatabaseService from './services/databaseService'
-import ImageEntitiesService from './services/imageEntitiesService';
-import Routes from './routes/routes';
-import FileStoreService from './services/fileStoreService';
+import bodyParser from 'body-parser';
+import WebSocket from 'ws';
+import DatabaseService from './services/databaseService.mjs';
+import ImageEntitiesService from './services/imageEntitiesService.mjs';
+import Routes from './routes/routes.mjs';
+import FileStoreService from './services/fileStoreService.mjs';
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default class gifWall {
-    app
     constructor() {
        this.app = express();
     }

@@ -1,6 +1,7 @@
 import './imageEntity.css';
 import {createElement} from '../utils/domUtils';
 import ImageEntity from './imageEntity';
+import axios from 'axios';
 
 export default class ImageEntityManager {
     center
@@ -12,15 +13,12 @@ export default class ImageEntityManager {
         this.domContainer = createElement('div', 'image-entity-container');
         document.body.append(this.domContainer);
         this.calculatePlacementCenter();
-        console.log(this.center);
-
     }
 
-   async addGifEntity(gifEntityData) {
-        const entity = new ImageEntity(gifEntityData);
+   async addImageEntity(entityData) {
+        const entity = new ImageEntity(entityData);
         this.entities.set(entity.fileHash, entity);
         this.domContainer.prepend(entity.domElement);
-        entity.position = gifEntityData.position;
         await entity.Load();
     }
 
@@ -31,5 +29,18 @@ export default class ImageEntityManager {
         const y = containerPosY + Math.floor(window.innerHeight/2);
         this.center.x = x;
         this.center.y = y;
+    }
+
+    async start() {
+        const promises = []
+        try {
+            const response = await axios.get('/entities');
+            response.data.forEach(entityData => {
+                promises.push(this.addImageEntity(entityData));
+            })
+        } catch (error) {
+            throw error;
+        }
+        await Promise.allSettled(promises);
     }
 }

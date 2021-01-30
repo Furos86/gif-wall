@@ -4,7 +4,6 @@
   ],
   "plugins": [
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-transform-runtime",
-    "syntax-dynamic-import"
+    "@babel/plugin-transform-runtime"
   ]
 }

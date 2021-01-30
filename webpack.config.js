@@ -51,6 +51,9 @@ module.exports = {
       },
       '/image': {
         target:'http://localhost:80'
+      },
+      '/entities': {
+        target:'http://localhost:80'
       }
     }
   }

@@ -43,7 +43,7 @@ export default class UploadManager {
         form.append('position', parsedPosition);
         try {
             const response = await axios.post('/upload',form);
-            await this.gifEntityManager.addGifEntity({fileHash:response.data.hash, position:this.gifEntityManager.center})
+            await this.gifEntityManager.addImageEntity(response.data)
         } catch (error) {
             console.log(error);
         }

@@ -1,6 +1,4 @@
 export default class Controller {
-    imageEntityService
-    fileStoreService
     constructor(gifEntityService, fileStoreService) {
         this.imageEntityService = gifEntityService;
         this.fileStoreService = fileStoreService;
@@ -8,8 +6,8 @@ export default class Controller {
     Upload = async (request, response) => {
         const position = JSON.parse(request.body.position);
         const file = request.files[0];
-        const hash = await this.imageEntityService.Create(position, file);
-        response.json({hash:hash})
+        const entityData = await this.imageEntityService.Create(position, file);
+        response.json(entityData)
     }
 
     Entities = async(request, response) => {

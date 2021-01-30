@@ -1,7 +1,5 @@
 import crypto from 'crypto'
 export default class ImageEntitiesService {
-    database
-    fileStore
 
     constructor(databaseService, fileStoreService) {
         this.fileStore = fileStoreService;
@@ -9,24 +7,31 @@ export default class ImageEntitiesService {
     }
 
     async Create(position, file) {
-        //creates a gif entity
-        const hash = this.generateHash(file.buffer);
-        const storeFile = await this.HashExists(hash);
-        const imageEntity = this.database.models.ImageEntity.build({
-            fileHash:hash,
-            x:position.x,
-            y:position.y,
-            z:0
-        })
         try {
-            await imageEntity.save();
-        }catch(error) {
-            console.log(error)
+            const hash = this.generateHash(file.buffer);
+            const storeFile = await this.HashExists(hash);
+            const imageEntity = this.database.models.ImageEntity.build({
+                fileHash: hash,
+                x: position.x,
+                y: position.y,
+                z: 0
+            })
+            try {
+                await imageEntity.save();
+            } catch (error) {
+                console.log(error)
+            }
+            if (storeFile) await this.fileStore.Store(hash, file.buffer);
+            //after create, emit update event
+            return await this.database.models.ImageEntity.findOne({
+                raw: true,
+                where: {
+                    id: imageEntity.id
+                }
+            })
+        } catch(error) {
+            throw error;
         }
-        if(storeFile) await this.fileStore.Store(hash, file.buffer);
-        //after create, emit update event
-
-        return imageEntity.fileHash;
     }
 
     Remove() {

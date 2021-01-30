@@ -1,4 +1,5 @@
-import {DataTypes} from 'sequelize';
+import Sequelize from 'sequelize';
+const {DataTypes} = Sequelize;
 
 export function ImageEntityFactory(sequelize) {
     return sequelize.define('imageEntity', {

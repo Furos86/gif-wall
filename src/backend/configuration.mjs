@@ -1,4 +1,5 @@
-import {get} from 'env-var'
+import envVar from 'env-var'
+const {get} = envVar;
 
 export default class Configuration {
     static databaseHost = get('DATABASE_HOST').default('localhost').asString();

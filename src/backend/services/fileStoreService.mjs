@@ -1,10 +1,9 @@
 import fs from 'fs'
 import fsPromises from 'fs/promises'
 import path from 'path';
-import Configuration from '../configuration';
+import Configuration from '../configuration.mjs';
 
 export default class FileStoreService {
-    directory
     constructor() {
 
         this.directory = Configuration.localFileStoreLocation

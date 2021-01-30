@@ -15,6 +15,7 @@ export default class ImageEntity {
         const bgColor = Math.floor(Math.random()*16777215).toString(16);
         this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;
+        this.position = {x:gifEntityData.x, y:gifEntityData.y};
     }
 
     Load = async() => {

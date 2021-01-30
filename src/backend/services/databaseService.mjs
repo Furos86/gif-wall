@@ -1,11 +1,10 @@
 import {Sequelize} from 'sequelize';
 import mysql from 'mysql2'
-import Configuration from '../configuration'
-import {ImageEntityFactory} from '../models/imageEntity';
-import {sleep} from '../utils/sleep';
+import Configuration from '../configuration.mjs'
+import {ImageEntityFactory} from '../models/imageEntity.mjs';
+import {sleep} from '../utils/sleep.mjs';
 
 export default class DatabaseService {
-    sequelize
     models = {
         ImageEntity:null
     }

@@ -1,4 +1,4 @@
-import gifWall from './gifwall';
+import gifWall from './gifWall.mjs';
 
 export default( async () => {
     try {

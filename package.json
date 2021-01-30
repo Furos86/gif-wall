@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "share all the gifs!",
   "main": "index.js",
+  "cjs": true,
   "scripts": {
     "webpack:start": "webpack serve",
     "build:frontend": "webpack"
