@@ -10,8 +10,16 @@
     transition: opacity .5s linear;
 }
 
-.image-entity.position-ease {
+.position-ease {
     transition-property:left, opacity, top;
     transition-duration: 1s, .5s;
     transition-timing-function: ease-out, linear;
+}
+
+#drag-overlay {
+    position: absolute;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    display: none;
 }

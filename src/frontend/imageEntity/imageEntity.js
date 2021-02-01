@@ -10,13 +10,14 @@ export default class ImageEntity {
     _position = {x:0, y:0};
     _dragOffset = {x:0, y:0};
     _websocket;
-    constructor(entityData, websocket) {
+    _parent;
+    constructor(entityData, websocket, parent) {
+        this._parent = parent;
         this.id = entityData.id;
         this._websocket = websocket;
         this.fileHash = entityData.fileHash;
         this.domElement = createElement('div', '');
         this.domElement.classList.add('image-entity');
-        this.domElement.classList.add('position-ease');
         const bgColor = Math.floor(Math.random()*16777215).toString(16);
         this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;
@@ -36,7 +37,12 @@ export default class ImageEntity {
     }
 
     ProcessData(entityData) {
-        this.position = {x:entityData.x, y:entityData.y};
+        this.domElement.classList.add('position-ease');
+        this.position ={x:entityData.x, y:entityData.y};
+    }
+
+    UpdatePosition(position) {
+        this.position = position;
     }
 
     set position(value) {
@@ -71,8 +77,8 @@ export default class ImageEntity {
     }
 
     startDrag = (event) => {
-       this._dragOffset.x = event.offsetX;
-       this._dragOffset.y = event.offsetY;
+       this._dragOffset.x = event.offsetX + this._parent.domContainer.offsetLeft;
+       this._dragOffset.y = event.offsetY + this._parent.domContainer.offsetTop ;
        window.onmousemove = this.drag;
        window.onmouseup = this.stopDrag;
        this.domElement.classList.remove('position-ease')
@@ -84,7 +90,6 @@ export default class ImageEntity {
         this._dragOffset.x = 0;
         this._dragOffset.y = 0;
         this._websocket.UpdateEntity({...this._position, id:this.id});
-        this.domElement.classList.add('position-ease');
     }
 
     drag = (event) => {
