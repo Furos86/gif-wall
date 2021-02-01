@@ -40,11 +40,15 @@ export default class ImageEntitiesService {
         //after remove. emit remove entity event
     }
 
-    Update() {
-        /*
-            location (x,y,z)
-            after update, emit new location/layer state
-         */
+    async Update(entityUpdateData) {
+        const entity = await this.database.models.ImageEntity.findOne({
+            where: {
+                id: entityUpdateData.id
+            }
+        })
+        entity.x = entityUpdateData.x
+        entity.y = entityUpdateData.y;
+        await entity.save();
     }
 
     async HashExists(hash) {

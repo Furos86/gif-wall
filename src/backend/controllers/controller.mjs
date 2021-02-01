@@ -1,12 +1,14 @@
 export default class Controller {
-    constructor(gifEntityService, fileStoreService) {
+    constructor(gifEntityService, webSocketServiceService, fileStoreService) {
         this.imageEntityService = gifEntityService;
+        this.webSocketServerService = webSocketServiceService;
         this.fileStoreService = fileStoreService;
     }
     Upload = async (request, response) => {
         const position = JSON.parse(request.body.position);
         const file = request.files[0];
         const entityData = await this.imageEntityService.Create(position, file);
+        await this.webSocketServerService.EmitEntityCreate(entityData);
         response.json(entityData)
     }
 

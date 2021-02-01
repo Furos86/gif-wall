@@ -6,9 +6,9 @@ import {asyncHandler} from '../utils/asyncHandler.mjs'
 
 export default class Routes {
 
-    constructor(gifEntityService, fileStoreService) {
+    constructor(gifEntityService, webSocketServerService, fileStoreService) {
         this.router = new Router();
-        let controller = new Controller(gifEntityService, fileStoreService);
+        let controller = new Controller(gifEntityService, webSocketServerService, fileStoreService);
 
         const uploadMulter = multer().array('file');
         this.router.post('/upload', uploadMulter, asyncHandler(controller.Upload));

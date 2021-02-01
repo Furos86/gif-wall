@@ -4,25 +4,28 @@ import ImageEntity from './imageEntity';
 import axios from 'axios';
 
 export default class ImageEntityManager {
-    center
-    domContainer
-    entities
-    constructor() {
+    center;
+    domContainer;
+    entities;
+    websocketClient;
+    constructor(websocketClient) {
+        this.websocketClient = websocketClient;
         this.entities = new Map();
         this.center = {x:0, y:0}
         this.domContainer = createElement('div', 'image-entity-container');
         document.body.append(this.domContainer);
-        this.calculatePlacementCenter();
+        this.CalculatePlacementCenter();
+        websocketClient.onUpdateEntity = this.UpdateEntity;
     }
 
-   async addImageEntity(entityData) {
-        const entity = new ImageEntity(entityData);
-        this.entities.set(entity.fileHash, entity);
+   async AddImageEntity(entityData) {
+        const entity = new ImageEntity(entityData, this.websocketClient);
+        this.entities.set(entity.id, entity);
         this.domContainer.prepend(entity.domElement);
         await entity.Load();
     }
 
-    calculatePlacementCenter() {
+    CalculatePlacementCenter() {
         const containerPosX = this.domContainer.offsetLeft;
         const containerPosY = this.domContainer.offsetTop;
         const x = containerPosX + Math.floor(window.innerWidth/2);
@@ -31,12 +34,16 @@ export default class ImageEntityManager {
         this.center.y = y;
     }
 
+    UpdateEntity = (entityData) => {
+        this.entities.get(entityData.id).ProcessData(entityData);
+    }
+
     async start() {
         const promises = []
         try {
             const response = await axios.get('/entities');
             response.data.forEach(entityData => {
-                promises.push(this.addImageEntity(entityData));
+                promises.push(this.AddImageEntity(entityData));
             })
         } catch (error) {
             throw error;

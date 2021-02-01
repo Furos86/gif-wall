@@ -2,32 +2,40 @@ import {createElement, ImagePromise} from '../utils/domUtils';
 
 export default class ImageEntity {
     domElement;
+    fileHash;
     id;
     _size = {width:0, height:0};
     _scale = {width:1, height:1};
 
     _position = {x:0, y:0};
     _dragOffset = {x:0, y:0};
-    constructor(gifEntityData) {
-        this.id = gifEntityData.fileHash;
+    _websocket;
+    constructor(entityData, websocket) {
+        this.id = entityData.id;
+        this._websocket = websocket;
+        this.fileHash = entityData.fileHash;
         this.domElement = createElement('div', '')
         this.domElement.classList.add('image-entity')
         const bgColor = Math.floor(Math.random()*16777215).toString(16);
         this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;
-        this.position = {x:gifEntityData.x, y:gifEntityData.y};
+        this.position = {x:entityData.x, y:entityData.y};
     }
 
     Load = async() => {
         let image;
         try {
-            image = await ImagePromise(`/image/${this.id}`);
+            image = await ImagePromise(`/image/${this.fileHash}`);
         } catch(error) {
             console.log(error)
         }
         this.domElement.style.backgroundImage = `url(${image.src})`;
         this.size = {width:image.width, height:image.height};
         this.show();
+    }
+
+    ProcessData(entityData) {
+        this.position = {x:entityData.x, y:entityData.y};
     }
 
     set position(value) {
@@ -73,12 +81,12 @@ export default class ImageEntity {
         window.onmouseup = null;
         this._dragOffset.x = 0;
         this._dragOffset.y = 0;
+        this._websocket.UpdateEntity({...this._position, id:this.id})
     }
 
     drag = (event) => {
         const newX = event.clientX - this._dragOffset.x;
         const newY = event.clientY - this._dragOffset.y;
-        console.log({x:event.clientX, y:event.clientY});
         this.position = {x:newX, y:newY};
     }
 
