@@ -9,3 +9,9 @@
     opacity: 0;
     transition: opacity .5s linear;
 }
+
+.image-entity.position-ease {
+    transition-property:left, opacity, top;
+    transition-duration: 1s, .5s;
+    transition-timing-function: ease-out, linear;
+}

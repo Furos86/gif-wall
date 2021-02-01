@@ -14,8 +14,9 @@ export default class ImageEntity {
         this.id = entityData.id;
         this._websocket = websocket;
         this.fileHash = entityData.fileHash;
-        this.domElement = createElement('div', '')
-        this.domElement.classList.add('image-entity')
+        this.domElement = createElement('div', '');
+        this.domElement.classList.add('image-entity');
+        this.domElement.classList.add('position-ease');
         const bgColor = Math.floor(Math.random()*16777215).toString(16);
         this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;
@@ -74,6 +75,7 @@ export default class ImageEntity {
        this._dragOffset.y = event.offsetY;
        window.onmousemove = this.drag;
        window.onmouseup = this.stopDrag;
+       this.domElement.classList.remove('position-ease')
     }
 
     stopDrag = () => {
@@ -81,7 +83,8 @@ export default class ImageEntity {
         window.onmouseup = null;
         this._dragOffset.x = 0;
         this._dragOffset.y = 0;
-        this._websocket.UpdateEntity({...this._position, id:this.id})
+        this._websocket.UpdateEntity({...this._position, id:this.id});
+        this.domElement.classList.add('position-ease');
     }
 
     drag = (event) => {

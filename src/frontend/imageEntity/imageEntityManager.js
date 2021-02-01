@@ -15,10 +15,11 @@ export default class ImageEntityManager {
         this.domContainer = createElement('div', 'image-entity-container');
         document.body.append(this.domContainer);
         this.CalculatePlacementCenter();
-        websocketClient.onUpdateEntity = this.UpdateEntity;
+        websocketClient.on('updateEntity',this.UpdateEntity);
+        websocketClient.on('createEntity', this.CreateEntity)
     }
 
-   async AddImageEntity(entityData) {
+   CreateEntity = async(entityData) => {
         const entity = new ImageEntity(entityData, this.websocketClient);
         this.entities.set(entity.id, entity);
         this.domContainer.prepend(entity.domElement);
@@ -43,7 +44,7 @@ export default class ImageEntityManager {
         try {
             const response = await axios.get('/entities');
             response.data.forEach(entityData => {
-                promises.push(this.AddImageEntity(entityData));
+                promises.push(this.CreateEntity(entityData));
             })
         } catch (error) {
             throw error;

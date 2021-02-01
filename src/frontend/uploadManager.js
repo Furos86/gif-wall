@@ -4,9 +4,9 @@ import {createElement} from './utils/domUtils';
 export default class UploadManager {
     isLocked
     dropBox
-    gifEntityManager
+    imageEntityManager
     constructor(imageEntityManager) {
-        this.gifEntityManager = imageEntityManager;
+        this.imageEntityManager = imageEntityManager;
         this.isLocked = false;
         window.addEventListener('dragenter', this.dragEnterEvent);
 
@@ -39,11 +39,11 @@ export default class UploadManager {
         const file = files[0];
         const form = new FormData();
         form.append('file', file);
-        const parsedPosition = JSON.stringify(this.gifEntityManager.center);
+        const parsedPosition = JSON.stringify(this.imageEntityManager.center);
         form.append('position', parsedPosition);
         try {
             const response = await axios.post('/upload',form);
-            await this.gifEntityManager.addImageEntity(response.data)
+            await this.imageEntityManager.CreateEntity(response.data)
         } catch (error) {
             console.log(error);
         }
