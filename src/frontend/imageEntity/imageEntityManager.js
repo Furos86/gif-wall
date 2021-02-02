@@ -8,9 +8,11 @@ export default class ImageEntityManager {
     domContainer;
     entities;
     websocketClient;
+    isMod;
     _dragOverlay;
     _dragOffset = {x:0, y:0};
     constructor(websocketClient) {
+        this.isMod = false;
         this.websocketClient = websocketClient;
         this.entities = new Map();
         this.center = {x:0, y:0}
@@ -20,16 +22,26 @@ export default class ImageEntityManager {
         this.domContainer = createElement('div', 'image-entity-container');
         document.body.append(this.domContainer);
         this.CalculatePlacementCenter();
-        document.body.addEventListener('keydown', this.dragContainerListener);
-        document.body.addEventListener('keyup', this.dragContainerListener);
+        document.body.addEventListener('keydown', this.keyPressEventHandler);
+        document.body.addEventListener('keyup', this.keyPressEventHandler);
         websocketClient.on('updateEntity',this.UpdateEntity);
         websocketClient.on('createEntity', this.CreateEntity)
     }
 
-    dragContainerListener = (event) => {
-        if(event.code !== 'Space') return null;
-        if(event.type === 'keydown') this.activeContainerDrag();
-        if(event.type === 'keyup') this.stopContainerDrag();
+    keyPressEventHandler = (event) => {
+        if(event.code === 'Space') {
+            if (event.type === 'keydown') this.activeContainerDrag();
+            if (event.type === 'keyup') this.stopContainerDrag();
+            return null;
+        }
+        if(event.code === 'ControlLeft') {
+            if(event.type === 'keydown') {
+                this.isMod = true;
+            }
+            if(event.type === 'keyup') {
+                this.isMod = false;
+            }
+        }
     }
 
     activeContainerDrag() {

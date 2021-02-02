@@ -5,7 +5,8 @@ export default class ImageEntity {
     fileHash;
     id;
     _size = {width:0, height:0};
-    _scale = {width:1, height:1};
+    _depth= 0;
+    _scale = 1;
 
     _position = {x:0, y:0};
     _dragOffset = {x:0, y:0};
@@ -22,6 +23,8 @@ export default class ImageEntity {
         this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;
         this.position = {x:entityData.x, y:entityData.y};
+        this.depth = entityData.z;
+        this.scale = entityData.scale;
     }
 
     Load = async() => {
@@ -38,7 +41,12 @@ export default class ImageEntity {
 
     ProcessData(entityData) {
         this.domElement.classList.add('position-ease');
-        this.position ={x:entityData.x, y:entityData.y};
+        this.position = {x:entityData.x, y:entityData.y};
+        this.scale = entityData.scale;
+    }
+
+    set depth(value) {
+        this._depth = value;
     }
 
     UpdatePosition(position) {
@@ -66,8 +74,8 @@ export default class ImageEntity {
     }
 
     updateAbsoluteSize() {
-        const absoluteWidth = this._size.width * this._scale.width;
-        const absoluteHeight = this._size.height * this._scale.height;
+        const absoluteWidth = this._size.width * this._scale;
+        const absoluteHeight = this._size.height * this._scale;
         this.domElement.style.width = `${absoluteWidth}px`
         this.domElement.style.height = `${absoluteHeight}px`
     }
@@ -77,11 +85,12 @@ export default class ImageEntity {
     }
 
     startDrag = (event) => {
-       this._dragOffset.x = event.offsetX + this._parent.domContainer.offsetLeft;
-       this._dragOffset.y = event.offsetY + this._parent.domContainer.offsetTop ;
-       window.onmousemove = this.drag;
-       window.onmouseup = this.stopDrag;
-       this.domElement.classList.remove('position-ease')
+        if(this._parent.isMod) return;
+        this._dragOffset.x = event.offsetX + this._parent.domContainer.offsetLeft;
+        this._dragOffset.y = event.offsetY + this._parent.domContainer.offsetTop ;
+        window.onmousemove = this.drag;
+        window.onmouseup = this.stopDrag;
+        this.domElement.classList.remove('position-ease');
     }
 
     stopDrag = () => {
@@ -89,7 +98,7 @@ export default class ImageEntity {
         window.onmouseup = null;
         this._dragOffset.x = 0;
         this._dragOffset.y = 0;
-        this._websocket.UpdateEntity({...this._position, id:this.id});
+        this._websocket.UpdateEntity({...this._position,z:this._depth, scale:this._scale, id:this.id});
     }
 
     drag = (event) => {

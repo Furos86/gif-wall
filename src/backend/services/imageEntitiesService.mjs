@@ -46,8 +46,10 @@ export default class ImageEntitiesService {
                 id: entityUpdateData.id
             }
         })
-        entity.x = entityUpdateData.x
+        entity.x = entityUpdateData.x;
         entity.y = entityUpdateData.y;
+        entity.z = entityUpdateData.z;
+        entity.scale = entityUpdateData.scale;
         await entity.save();
     }
 

@@ -8,6 +8,7 @@
     height: 100px;
     opacity: 0;
     transition: opacity .5s linear;
+    user-select: none;
 }
 
 .position-ease {

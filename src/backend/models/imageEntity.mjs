@@ -22,6 +22,10 @@ export function ImageEntityFactory(sequelize) {
         z:{
             type:DataTypes.INTEGER,
             defaultValue:0
+        },
+        scale:{
+            type:DataTypes.INTEGER,
+            defaultValue:1
         }
     })
 }
