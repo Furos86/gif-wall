@@ -2,6 +2,8 @@ import {createElement, ImagePromise} from '../utils/domUtils';
 
 export default class ImageEntity {
     domElement;
+    _modDomElement;
+    _modDomDrag;
     fileHash;
     id;
     _size = {width:0, height:0};
@@ -17,11 +19,17 @@ export default class ImageEntity {
         this.id = entityData.id;
         this._websocket = websocket;
         this.fileHash = entityData.fileHash;
-        this.domElement = createElement('div', '');
+
+        this.domElement = createElement('div');
         this.domElement.classList.add('image-entity');
-        const bgColor = Math.floor(Math.random()*16777215).toString(16);
-        this.domElement.style.backgroundColor = '#'+bgColor;
         this.domElement.onmousedown = this.startDrag;
+        this._modDomElement = createElement('div');
+        this._modDomElement.classList.add('mod-overlay');
+        this.domElement.appendChild(this._modDomElement);
+        this._modDomDrag = createElement('div');
+        this._modDomDrag.classList.add('drag-icon');
+        this._modDomElement.appendChild(this._modDomDrag);
+
         this.position = {x:entityData.x, y:entityData.y};
         this.depth = entityData.z;
         this.scale = entityData.scale;
@@ -84,8 +92,31 @@ export default class ImageEntity {
         this.domElement.style.opacity = '1';
     }
 
+    enableMod = () => {
+        this._modDomElement.style.display = 'block';
+        this._modDomDrag.onmousedown = this.startScaleDrag;
+        window.onmouseup = this.stopScaleDrag;
+        document.body.addEventListener('keyup', this.ctrlUp);
+    }
+
+    ctrlUp = (event) => {
+        if(event.code === 'ControlLeft') {
+            this.disableMod();
+            document.body.removeEventListener('keyup', this.ctrlUp);
+        }
+    }
+
+    disableMod() {
+        this._modDomElement.style.display = 'none';
+        this.stopScaleDrag();
+        this._modDomDrag.onmousedown = null;
+    }
+
     startDrag = (event) => {
-        if(this._parent.isMod) return;
+        if(this._parent.isMod) {
+            this.enableMod();
+            return;
+        }
         this._dragOffset.x = event.offsetX + this._parent.domContainer.offsetLeft;
         this._dragOffset.y = event.offsetY + this._parent.domContainer.offsetTop ;
         window.onmousemove = this.drag;
@@ -107,5 +138,40 @@ export default class ImageEntity {
         this.position = {x:newX, y:newY};
     }
 
+    _scaleDragStart = {x:0, y:0};
+    _scaleStart;
+    startScaleDrag = (event) => {
+        this._scaleDragStart.x = event.clientX;
+        this._scaleDragStart.y = event.clientY;
+        this._scaleStart = this._scale;
+        window.onmousemove = this.scaleDrag;
 
+    }
+
+    scaleDrag = (event) => {
+
+        let newPos;
+        let startPos;
+        let scaleVal;
+        if(event.clientX < event.clientY) {
+            newPos = event.clientX;
+            startPos = this._scaleDragStart.x;
+            console.log(`x is klein ${startPos} ${this._scaleDragStart.x}`)
+        }
+        if(event.clientY < event.clientX) {
+            newPos = event.clientY;
+            startPos = this._scaleDragStart.y;
+
+            console.log(`y is klein ${startPos} ${this._scaleDragStart.y}`)
+        }
+
+        scaleVal = this._scaleStart/startPos;
+        this.scale = scaleVal * newPos;
+    }
+
+    stopScaleDrag = () => {
+        console.log('stopDrag');
+        window.onmousemove = null;
+        window.onmouseup = null;
+    }
 }
