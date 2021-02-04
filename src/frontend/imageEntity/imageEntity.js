@@ -113,6 +113,7 @@ export default class ImageEntity {
     }
 
     startDrag = (event) => {
+        this.domElement.classList.remove('position-ease');
         if(this._parent.isMod) {
             this.enableMod();
             return;
@@ -121,7 +122,6 @@ export default class ImageEntity {
         this._dragOffset.y = event.offsetY + this._parent.domContainer.offsetTop ;
         window.onmousemove = this.drag;
         window.onmouseup = this.stopDrag;
-        this.domElement.classList.remove('position-ease');
     }
 
     stopDrag = () => {
@@ -129,7 +129,7 @@ export default class ImageEntity {
         window.onmouseup = null;
         this._dragOffset.x = 0;
         this._dragOffset.y = 0;
-        this._websocket.UpdateEntity({...this._position,z:this._depth, scale:this._scale, id:this.id});
+        this._update();
     }
 
     drag = (event) => {
@@ -173,5 +173,10 @@ export default class ImageEntity {
         console.log('stopDrag');
         window.onmousemove = null;
         window.onmouseup = null;
+        this._update();
     }
+
+    _update = () => {
+    this._websocket.UpdateEntity({...this._position,z:this._depth, scale:this._scale, id:this.id});
+}
 }

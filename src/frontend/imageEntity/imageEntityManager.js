@@ -74,6 +74,7 @@ export default class ImageEntityManager {
     }
 
    CreateEntity = async(entityData) => {
+        if(this.entities.has(entityData.id)) return;
         const entity = new ImageEntity(entityData, this.websocketClient, this);
         this.entities.set(entity.id, entity);
         this.domContainer.prepend(entity.domElement);

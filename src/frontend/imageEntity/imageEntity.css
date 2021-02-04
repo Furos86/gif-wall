@@ -29,9 +29,7 @@
 }
 
 .position-ease {
-    transition-property:left, opacity, top;
-    transition-duration: 1s, .5s;
-    transition-timing-function: ease-out, linear;
+    transition: left 1s ease-out, opacity 500ms linear, top 1s ease-out, width 1s ease-out, height 1s ease-out;
 }
 
 #drag-overlay {
