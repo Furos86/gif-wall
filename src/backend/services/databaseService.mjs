@@ -30,18 +30,22 @@ export default class DatabaseService {
     async waitForConnection() {
         let isConnected = false;
 
-        const db = mysql.createConnection({
-            host: Configuration.host,
-            port: 3306,
-            password: Configuration.databasePassword,
-            user: Configuration.databaseUser
-        })
-
-        db.connect((error) => {
-            if(!error) isConnected = true;
-        })
+        let db;
 
         while(!isConnected) {
+            db = mysql.createConnection({
+                host: Configuration.databaseHost,
+                port: 3306,
+                password: Configuration.databasePassword,
+                user: Configuration.databaseUser
+            })
+            db.connect((error) => {
+                if(!error) {
+                    isConnected = true;
+                } else {
+                    db.close()
+                }
+            })
             console.log(`connecting to database`);
             await sleep(500);
         }
