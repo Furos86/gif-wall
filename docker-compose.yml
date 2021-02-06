@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  database:
+    restart: always
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+  server:
+    image: gifwall
+    environment:
+      - MAKE_DATABASE=true
+      - FILE_STORE_LOCATION=./file_store
+      - DATABASE_HOST=database
+    ports:
+      - 80:80
+      - 8080:8080
