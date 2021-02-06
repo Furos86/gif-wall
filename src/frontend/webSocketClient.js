@@ -3,7 +3,14 @@ export default class WebSocketClient {
     _callbacks = new Map();
     webSocket
     constructor() {
-        this.webSocket = new WebSocket('ws://localhost:8080');
+        let loc = window.location, new_uri;
+        if (loc.protocol === "https:") {
+            new_uri = "wss:";
+        } else {
+            new_uri = "ws:";
+        }
+        new_uri += "//" + loc.hostname;
+        this.webSocket = new WebSocket(`${new_uri}:8080`);
         this.webSocket.onmessage = this._messageSwitch;
     }
 
