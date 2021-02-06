@@ -5,7 +5,8 @@
   "main": "index.js",
   "cjs": true,
   "scripts": {
-    "webpack:start": "webpack serve",
+    "start-dev:frontend": "webpack serve",
+    "start-dev:backend": "node ./src/backend/index.mjs",
     "build:frontend": "webpack"
   },
   "author": "Yannick van Schaick",
