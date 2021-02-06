@@ -34,10 +34,23 @@ export default class ImageEntitiesService {
         }
     }
 
-    Remove() {
-        //remove gif entity
-        //check if entity is duplicate by checking file hash usages
-        //after remove. emit remove entity event
+    async Remove(id) {
+        const entity = await this.database.models.ImageEntity.findOne({
+            where: {
+                id: id
+            }
+        });
+
+        const hashToDelete = entity.dataValues.fileHash;
+        await entity.destroy();
+        const duplicateFound = await this.database.models.ImageEntity.findOne({
+            raw:true,
+            where: {
+                fileHash: hashToDelete
+            }
+        })
+        if(!duplicateFound) await this.fileStore.remove(hashToDelete);
+
     }
 
     async Update(entityUpdateData) {

@@ -24,7 +24,7 @@ export function ImageEntityFactory(sequelize) {
             defaultValue:0
         },
         scale:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.FLOAT,
             defaultValue:1
         }
     })

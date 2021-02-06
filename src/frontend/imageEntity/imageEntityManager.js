@@ -25,7 +25,8 @@ export default class ImageEntityManager {
         document.body.addEventListener('keydown', this.keyPressEventHandler);
         document.body.addEventListener('keyup', this.keyPressEventHandler);
         websocketClient.on('updateEntity',this.UpdateEntity);
-        websocketClient.on('createEntity', this.CreateEntity)
+        websocketClient.on('createEntity', this.CreateEntity);
+        websocketClient.on('deleteEntity', this.DeleteEntity);
     }
 
     keyPressEventHandler = (event) => {
@@ -92,6 +93,13 @@ export default class ImageEntityManager {
 
     UpdateEntity = (entityData) => {
         this.entities.get(entityData.id).ProcessData(entityData);
+    }
+
+    DeleteEntity = (id) => {
+        const entity = this.entities.get(id);
+        this.entities.delete(id);
+        this.domContainer.removeChild(entity.domElement);
+        entity.Destroy();
     }
 
     async start() {

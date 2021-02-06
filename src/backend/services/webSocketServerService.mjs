@@ -13,7 +13,12 @@ export default class WebSocketServerService {
             switch(event.type) {
                 case 'updateEntity':
                     await this.imageEntityService.Update(event.data);
-                    this._sendEvent(event)
+                    this._sendEvent(event);
+                    break;
+                case 'deleteEntity':
+                    await this.imageEntityService.Remove(event.data);
+                    this._sendEvent(event);
+                    break;
             }
         })
     }

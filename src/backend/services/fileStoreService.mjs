@@ -19,4 +19,8 @@ export default class FileStoreService {
     async retrieve(id) {
         return await fsPromises.readFile(path.join(this.directory, id));
     }
+
+    async remove(id) {
+        return await fsPromises.unlink(path.join(this.directory, id));
+    }
 }

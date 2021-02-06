@@ -4,6 +4,7 @@ export default class ImageEntity {
     domElement;
     _modDomElement;
     _modDomDrag;
+    _modDomDelete;
     fileHash;
     id;
     _size = {width:0, height:0};
@@ -29,6 +30,9 @@ export default class ImageEntity {
         this._modDomDrag = createElement('div');
         this._modDomDrag.classList.add('drag-icon');
         this._modDomElement.appendChild(this._modDomDrag);
+        this._modDomDelete = createElement('div');
+        this._modDomDelete.classList.add('delete-icon');
+        this._modDomElement.appendChild(this._modDomDelete);
 
         this.position = {x:entityData.x, y:entityData.y};
         this.depth = entityData.z;
@@ -95,8 +99,8 @@ export default class ImageEntity {
     enableMod = () => {
         this._modDomElement.style.display = 'block';
         this._modDomDrag.onmousedown = this.startScaleDrag;
-        window.onmouseup = this.stopScaleDrag;
         document.body.addEventListener('keyup', this.ctrlUp);
+        this._modDomDelete.onclick = this.deleteClick;
     }
 
     ctrlUp = (event) => {
@@ -129,7 +133,7 @@ export default class ImageEntity {
         window.onmouseup = null;
         this._dragOffset.x = 0;
         this._dragOffset.y = 0;
-        this._update();
+        this.update();
     }
 
     drag = (event) => {
@@ -144,6 +148,8 @@ export default class ImageEntity {
         this._scaleDragStart.x = event.clientX;
         this._scaleDragStart.y = event.clientY;
         this._scaleStart = this._scale;
+
+        window.onmouseup = this.stopScaleDrag;
         window.onmousemove = this.scaleDrag;
 
     }
@@ -170,13 +176,22 @@ export default class ImageEntity {
     }
 
     stopScaleDrag = () => {
-        console.log('stopDrag');
         window.onmousemove = null;
         window.onmouseup = null;
-        this._update();
+        this.update();
     }
 
-    _update = () => {
-    this._websocket.UpdateEntity({...this._position,z:this._depth, scale:this._scale, id:this.id});
-}
+    update = () => {
+        this._websocket.UpdateEntity({...this._position,z:this._depth, scale:this._scale, id:this.id});
+    }
+
+    deleteClick = () => {
+        this._websocket.DeleteEntity(this.id);
+    }
+
+    Destroy() {
+        document.body.removeEventListener('keyup', this.ctrlUp);
+        this.domElement.onmousedown = null;
+        this._modDomDelete.onclick = null;
+    }
 }

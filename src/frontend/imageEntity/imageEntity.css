@@ -28,6 +28,15 @@
     background: darkgoldenrod;
 }
 
+.delete-icon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    right: 0;
+    background: deeppink;
+}
+
 .position-ease {
     transition: left 1s ease-out, opacity 500ms linear, top 1s ease-out, width 1s ease-out, height 1s ease-out;
 }

@@ -21,4 +21,8 @@ export default class WebSocketClient {
     UpdateEntity(entityUpdateData) {
         this.webSocket.send(JSON.stringify({type:'updateEntity', data:entityUpdateData}));
     }
+
+    DeleteEntity(id) {
+        this.webSocket.send(JSON.stringify({type:'deleteEntity',data:id}));
+    }
 }
