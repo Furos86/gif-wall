@@ -4,26 +4,36 @@ import {createElement} from './utils/domUtils';
 export default class UploadManager {
     isLocked
     dropBox
+    wrapper
     imageEntityManager
     constructor(imageEntityManager) {
         this.imageEntityManager = imageEntityManager;
         this.isLocked = false;
         window.addEventListener('dragenter', this.dragEnterEvent);
+        this.wrapper = createElement('div', 'dropbox-wrapper');
+
+        let wrapText = createElement('p')
+        wrapText.innerHTML = 'Upload image';
+        this.wrapper.appendChild(wrapText);
 
         this.dropBox = createElement('input', 'dropbox');
         this.dropBox.type = 'file';
-        document.body.appendChild(this.dropBox);
-        this.dropBox.addEventListener('drop', this.dropEvent);
-        this.dropBox.style.display = 'none';
+        this.wrapper.appendChild(this.dropBox);
 
+        this.dropBox.addEventListener('drop', this.dropEvent);
         this.dropBox.addEventListener('dragleave', this.dragExitEvent);
+        document.body.appendChild(this.wrapper);
+        this.hideDropBox();
     }
 
     dragEnterEvent = () => {
+        window.removeEventListener('dragenter', this.dragEnterEvent);
         this.showDropBox();
+
     }
 
     dragExitEvent = () => {
+        window.addEventListener('dragenter', this.dragEnterEvent);
         if(this.isLocked) return;
         this.hideDropBox();
     }
@@ -48,14 +58,15 @@ export default class UploadManager {
             console.log(error);
         }
         this.hideDropBox();
+        window.addEventListener('dragenter', this.dragEnterEvent);
         this.isLocked = false;
     }
 
     showDropBox() {
-        this.dropBox.style.display = 'block';
+        this.wrapper.style.display = 'block';
     }
 
     hideDropBox() {
-        this.dropBox.style.display = 'none';
+        this.wrapper.style.display = 'none';
     }
 }

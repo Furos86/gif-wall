@@ -22,6 +22,7 @@ export default class ImageEntityManager {
         this.domContainer = createElement('div', 'image-entity-container');
         document.body.append(this.domContainer);
         this.CalculatePlacementCenter();
+        window.onresize = this.CalculatePlacementCenter;
         document.body.addEventListener('keydown', this.keyPressEventHandler);
         document.body.addEventListener('keyup', this.keyPressEventHandler);
         websocketClient.on('updateEntity',this.UpdateEntity);
@@ -82,7 +83,7 @@ export default class ImageEntityManager {
         await entity.Load();
     }
 
-    CalculatePlacementCenter() {
+    CalculatePlacementCenter = () => {
         const containerPosX = this.domContainer.offsetLeft;
         const containerPosY = this.domContainer.offsetTop;
         const x = containerPosX + Math.floor(window.innerWidth/2);
