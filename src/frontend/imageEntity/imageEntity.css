@@ -84,8 +84,9 @@
     content: "◲";
     font-weight: bold;
     font-size: 26px;
-    width: 24px;
+    width: 22px;
     height: 24px;
+    padding-left: 2px;
     text-align: center;
     color: #656057;
     line-height: 27px;
@@ -93,7 +94,6 @@
     border-left: 2px solid #000;
     cursor: nw-resize;
 }
-
 .position-ease {
     transition: left 1s ease-out, opacity 500ms linear, top 1s ease-out, width 1s ease-out, height 1s ease-out;
 }
