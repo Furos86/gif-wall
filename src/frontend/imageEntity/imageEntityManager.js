@@ -64,10 +64,10 @@ export default class ImageEntityManager {
         window.onmouseup = null;
         this._dragOffset.x = 0;
         this._dragOffset.y = 0;
+        this.CalculatePlacementCenter();
     }
 
     drag = (event) => {
-        console.log(this._dragOffset.x);
         this.domContainer.style.left = (event.clientX - this._dragOffset.x) + 'px';
         this.domContainer.style.top  = (event.clientY - this._dragOffset.y) + 'px';
     }
@@ -86,8 +86,8 @@ export default class ImageEntityManager {
     }
 
     CalculatePlacementCenter = () => {
-        const containerPosX = this.domContainer.offsetLeft;
-        const containerPosY = this.domContainer.offsetTop;
+        const containerPosX = this.domContainer.offsetLeft * -1;
+        const containerPosY = this.domContainer.offsetTop * -1;
         const x = containerPosX + Math.floor(window.innerWidth/2);
         const y = containerPosY + Math.floor(window.innerHeight/2);
         this.center.x = x;
