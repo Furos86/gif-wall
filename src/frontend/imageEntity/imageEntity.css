@@ -60,7 +60,7 @@
 .mod-overlay::after {
     content: "";
     display: block;
-    width: calc(100% + 6px);
+    width: calc(100% + .3em);
     height: 25px;
     background-image: linear-gradient(90deg, #3f49c7, #a3cbd4);
     position: absolute;

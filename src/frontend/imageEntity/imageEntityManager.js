@@ -38,9 +38,11 @@ export default class ImageEntityManager {
         }
         if(event.code === 'ControlLeft') {
             if(event.type === 'keydown') {
+                this.entities.forEach(entity => entity.enableMod())
                 this.isMod = true;
             }
             if(event.type === 'keyup') {
+                this.entities.forEach( entity => entity.disableMod())
                 this.isMod = false;
             }
         }

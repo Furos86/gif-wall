@@ -15,6 +15,7 @@ export default class ImageEntity {
     _dragOffset = {x:0, y:0};
     _websocket;
     _parent;
+    _isScaleUpdate;
     constructor(entityData, websocket, parent) {
         this._parent = parent;
         this.id = entityData.id;
@@ -33,6 +34,9 @@ export default class ImageEntity {
         this._modDomDelete = createElement('div');
         this._modDomDelete.classList.add('delete-icon');
         this._modDomElement.appendChild(this._modDomDelete);
+
+        this._modDomDrag.onmousedown = this.startScaleDrag;
+        this._modDomDelete.onclick = this.deleteClick;
 
         this.position = {x:entityData.x, y:entityData.y};
         this.depth = entityData.z;
@@ -98,9 +102,9 @@ export default class ImageEntity {
 
     enableMod = () => {
         this._modDomElement.style.display = 'block';
-        this._modDomDrag.onmousedown = this.startScaleDrag;
-        document.body.addEventListener('keyup', this.ctrlUp);
-        this._modDomDelete.onclick = this.deleteClick;
+        //this._modDomDrag.onmousedown = this.startScaleDrag;
+        //document.body.addEventListener('keyup', this.ctrlUp);
+        //this._modDomDelete.onclick = this.deleteClick;
     }
 
     ctrlUp = (event) => {
@@ -113,15 +117,13 @@ export default class ImageEntity {
     disableMod() {
         this._modDomElement.style.display = 'none';
         this.stopScaleDrag();
-        this._modDomDrag.onmousedown = null;
+        //this._modDomDrag.onmousedown = null;
     }
 
     startDrag = (event) => {
         this.domElement.classList.remove('position-ease');
-        if(this._parent.isMod) {
-            this.enableMod();
-            return;
-        }
+        if(this._parent.isMod) return;
+
         this._dragOffset.x = event.offsetX + this._parent.domContainer.offsetLeft;
         this._dragOffset.y = event.offsetY + this._parent.domContainer.offsetTop ;
         window.onmousemove = this.drag;
@@ -155,20 +157,19 @@ export default class ImageEntity {
     }
 
     scaleDrag = (event) => {
-
+        this._isScaleUpdate = true;
         let newPos;
         let startPos;
         let scaleVal;
+
         if(event.clientX < event.clientY) {
             newPos = event.clientX;
             startPos = this._scaleDragStart.x;
-            console.log(`x is klein ${startPos} ${this._scaleDragStart.x}`)
         }
+
         if(event.clientY < event.clientX) {
             newPos = event.clientY;
             startPos = this._scaleDragStart.y;
-
-            console.log(`y is klein ${startPos} ${this._scaleDragStart.y}`)
         }
 
         scaleVal = this._scaleStart/startPos;
@@ -178,7 +179,10 @@ export default class ImageEntity {
     stopScaleDrag = () => {
         window.onmousemove = null;
         window.onmouseup = null;
-        this.update();
+        if(this._isScaleUpdate){
+            this._isScaleUpdate = false;
+            this.update();
+        }
     }
 
     update = () => {
