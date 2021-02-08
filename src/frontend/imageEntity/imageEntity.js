@@ -25,18 +25,25 @@ export default class ImageEntity {
         this.domElement = createElement('div');
         this.domElement.classList.add('image-entity');
         this.domElement.onmousedown = this.startDrag;
+
         this._modDomElement = createElement('div');
         this._modDomElement.classList.add('mod-overlay');
         this.domElement.appendChild(this._modDomElement);
+
+        let modWindow = createElement('div');
+        modWindow.classList.add('mod-window');
+        this._modDomElement.appendChild(modWindow);
+
         this._modDomDrag = createElement('div');
         this._modDomDrag.classList.add('drag-icon');
         this._modDomElement.appendChild(this._modDomDrag);
+        this._modDomDrag.onmousedown = this.startScaleDrag;
+
         this._modDomDelete = createElement('div');
         this._modDomDelete.classList.add('delete-icon');
         this._modDomElement.appendChild(this._modDomDelete);
-
-        this._modDomDrag.onmousedown = this.startScaleDrag;
         this._modDomDelete.onclick = this.deleteClick;
+
 
         this.position = {x:entityData.x, y:entityData.y};
         this.depth = entityData.z;

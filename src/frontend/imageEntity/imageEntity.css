@@ -36,7 +36,13 @@
     outline-offset: -2px;
 }
 
-.mod-overlay::before {
+.mod-window {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.mod-window::before {
     content: "";
     display: block;
     border: 6px ridge #e2dacc;
@@ -48,7 +54,7 @@
     outline: 2px solid;
 }
 
-.mod-overlay::after {
+.mod-window::after {
     content: "";
     display: block;
     width: calc(100% + .35em);
@@ -96,7 +102,6 @@
     right: 0;
     background: #e2dacc;
     border: 2px outset;
-    z-index: 1;
 }
 
 .delete-icon::before {
