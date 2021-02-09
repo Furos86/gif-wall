@@ -120,7 +120,6 @@ export default class ImageEntityManager {
             const entitiesData = response.data.entities;
             for(let id of order) {
                 let entityData = entitiesData.find(e => e.id === id);
-                console.log(entityData);
                 promises.push(this.CreateEntity(entityData));
             }
         } catch (error) {
