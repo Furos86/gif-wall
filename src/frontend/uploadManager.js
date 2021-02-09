@@ -41,7 +41,6 @@ export default class UploadManager {
     dropEvent = async (event) => {
         if(this.isLocked) return;
         this.isLocked = true;
-        event.stopPropagation();
         event.preventDefault();
 
         const dataTransfer = event.dataTransfer;
@@ -55,11 +54,20 @@ export default class UploadManager {
             const response = await axios.post('/upload',form);
             await this.imageEntityManager.CreateEntity(response.data)
         } catch (error) {
-            console.log(error);
+            if(error.response.status === 415) {
+                console.log("the server doesn't like that filetype :(");
+            } else {
+                console.log(error);
+            }
+            this.resetDropBox();
         }
+        this.resetDropBox();
+    }
+
+    resetDropBox() {
+        this.isLocked = false;
         this.hideDropBox();
         window.addEventListener('dragenter', this.dragEnterEvent);
-        this.isLocked = false;
     }
 
     showDropBox() {
