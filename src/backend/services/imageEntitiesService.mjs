@@ -1,9 +1,22 @@
 import crypto from 'crypto'
 export default class ImageEntitiesService {
+    displayOrder = [];
 
     constructor(databaseService, fileStoreService) {
         this.fileStore = fileStoreService;
         this.database = databaseService;
+    }
+
+    async start() {
+        const savedDisplayOrder = await this.database.models.DisplayOrder.findByPk(1);
+        if(!savedDisplayOrder) {
+            const newDisplayOrder = this.database.models.DisplayOrder.build({
+                state: this.displayOrder
+            })
+            await newDisplayOrder.save();
+        } else {
+            this.displayOrder = savedDisplayOrder.state;
+        }
     }
 
     async Create(position, file) {
@@ -23,6 +36,8 @@ export default class ImageEntitiesService {
             }
             if (storeFile) await this.fileStore.Store(hash, file.buffer);
             //after create, emit update event
+            this.displayOrder.push(imageEntity.id);
+            await this._storeDisplayOrder();
             return await this.database.models.ImageEntity.findOne({
                 raw: true,
                 where: {
@@ -34,15 +49,33 @@ export default class ImageEntitiesService {
         }
     }
 
-    async Remove(id) {
-        const entity = await this.database.models.ImageEntity.findOne({
-            where: {
-                id: id
-            }
-        });
+    async UpdateDisplayOrder(id) {
+        const idIndex = this.displayOrder.indexOf(id);
+        if(idIndex === -1) return;
+        this.displayOrder.splice(idIndex,1);
+        this.displayOrder.push(id);
+        await this._storeDisplayOrder()
+    }
 
+    async _storeDisplayOrder() {
+        //we always find by primary key 1 because atm we only have one displayOrder
+        const savedDisplayOrder = await this.database.models.DisplayOrder.findByPk(1);
+        if(savedDisplayOrder === null) return;
+        savedDisplayOrder.state = this.displayOrder;
+        await savedDisplayOrder.save();
+    }
+
+    async Remove(id) {
+        const entity = await this.database.models.ImageEntity.findByPk(id);
+        if(entity === null) return;
         const hashToDelete = entity.dataValues.fileHash;
         await entity.destroy();
+
+        const idIndex = this.displayOrder.indexOf(id);
+        if(idIndex === -1) return;
+        this.displayOrder.splice(idIndex, 1);
+        this._storeDisplayOrder();
+
         const duplicateFound = await this.database.models.ImageEntity.findOne({
             raw:true,
             where: {
@@ -50,15 +83,11 @@ export default class ImageEntitiesService {
             }
         })
         if(!duplicateFound) await this.fileStore.remove(hashToDelete);
-
     }
 
     async Update(entityUpdateData) {
-        const entity = await this.database.models.ImageEntity.findOne({
-            where: {
-                id: entityUpdateData.id
-            }
-        })
+        const entity = await this.database.models.ImageEntity.findByPk(entityUpdateData.id);
+        if(entity === null) return;
         entity.x = entityUpdateData.x;
         entity.y = entityUpdateData.y;
         entity.z = entityUpdateData.z;
@@ -80,9 +109,9 @@ export default class ImageEntitiesService {
     }
 
     async AllEntities() {
-        let data
+        let data = {entities:[], order:this.displayOrder}
         try {
-            data = await this.database.models.ImageEntity.findAll({
+            data.entities = await this.database.models.ImageEntity.findAll({
                 raw: true,
                 attributes: {
                     exclude: ['createdAt', 'updatedAt']

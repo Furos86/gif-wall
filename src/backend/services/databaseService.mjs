@@ -3,6 +3,7 @@ import mysql from 'mysql2'
 import Configuration from '../configuration.mjs'
 import {ImageEntityFactory} from '../models/imageEntity.mjs';
 import {sleep} from '../utils/sleep.mjs';
+import {DisplayOrderFactory} from '../models/displayOrder.mjs';
 
 export default class DatabaseService {
     models = {
@@ -21,8 +22,9 @@ export default class DatabaseService {
         })
 
         this.models.ImageEntity = ImageEntityFactory(this.sequelize);
+        this.models.DisplayOrder = DisplayOrderFactory(this.sequelize);
 
-        this.sequelize.sync();
+        await this.sequelize.sync();
     }
 
 

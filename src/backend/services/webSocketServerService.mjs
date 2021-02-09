@@ -19,6 +19,10 @@ export default class WebSocketServerService {
                     await this.imageEntityService.Remove(event.data);
                     this._sendEvent(event);
                     break;
+                case 'updateEntitiesDisplayOrder':
+                    await this.imageEntityService.UpdateDisplayOrder(event.data);
+                    this._sendEvent(event);
+                    break;
             }
         })
     }

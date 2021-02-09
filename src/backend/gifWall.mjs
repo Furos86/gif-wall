@@ -25,10 +25,11 @@ export default class gifWall {
 
         try{
             await databaseService.start();
+
         } catch (error) {
             console.log(error);
         }
-
+        await imageEntityService.start();
         this.app.listen(port);
         this.app.use(cors());
         this.app.use(bodyParser.json({limit: '1mb'}));

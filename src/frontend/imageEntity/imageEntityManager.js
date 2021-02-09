@@ -28,6 +28,7 @@ export default class ImageEntityManager {
         websocketClient.on('updateEntity',this.UpdateEntity);
         websocketClient.on('createEntity', this.CreateEntity);
         websocketClient.on('deleteEntity', this.DeleteEntity);
+        websocketClient.on('updateEntitiesDisplayOrder', this.UpdateEntitiesDisplayOrder)
     }
 
     keyPressEventHandler = (event) => {
@@ -81,7 +82,7 @@ export default class ImageEntityManager {
         if(this.entities.has(entityData.id)) return;
         const entity = new ImageEntity(entityData, this.websocketClient, this);
         this.entities.set(entity.id, entity);
-        this.domContainer.prepend(entity.domElement);
+        this.domContainer.appendChild(entity.domElement);
         await entity.Load();
     }
 
@@ -92,6 +93,12 @@ export default class ImageEntityManager {
         const y = containerPosY + Math.floor(window.innerHeight/2);
         this.center.x = x;
         this.center.y = y;
+    }
+
+    UpdateEntitiesDisplayOrder = (id) => {
+        const entity = this.entities.get(id);
+        this.domContainer.removeChild(entity.domElement);
+        this.domContainer.appendChild(entity.domElement);
     }
 
     UpdateEntity = (entityData) => {
@@ -109,9 +116,13 @@ export default class ImageEntityManager {
         const promises = []
         try {
             const response = await axios.get('/entities');
-            response.data.forEach(entityData => {
+            const order = response.data.order;
+            const entitiesData = response.data.entities;
+            for(let id of order) {
+                let entityData = entitiesData.find(e => e.id === id);
+                console.log(entityData);
                 promises.push(this.CreateEntity(entityData));
-            })
+            }
         } catch (error) {
             throw error;
         }

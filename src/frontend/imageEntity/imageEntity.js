@@ -29,6 +29,7 @@ export default class ImageEntity {
         this._modDomElement = createElement('div');
         this._modDomElement.classList.add('mod-overlay');
         this.domElement.appendChild(this._modDomElement);
+        this._modDomElement.onclick = this.toTopOfDisplay;
 
         let modWindow = createElement('div');
         modWindow.classList.add('mod-window');
@@ -72,10 +73,6 @@ export default class ImageEntity {
         this._depth = value;
     }
 
-    UpdatePosition(position) {
-        this.position = position;
-    }
-
     set position(value) {
         this._position = value;
         this.domElement.style.top = this._position.y + 'px';
@@ -99,8 +96,12 @@ export default class ImageEntity {
     updateAbsoluteSize() {
         const absoluteWidth = this._size.width * this._scale;
         const absoluteHeight = this._size.height * this._scale;
-        this.domElement.style.width = `${absoluteWidth}px`
-        this.domElement.style.height = `${absoluteHeight}px`
+        this.domElement.style.width = `${absoluteWidth}px`;
+        this.domElement.style.height = `${absoluteHeight}px`;
+    }
+
+    toTopOfDisplay = () => {
+        this._websocket.updateEntityDisplayOrder(this.id);
     }
 
     show() {
@@ -109,22 +110,11 @@ export default class ImageEntity {
 
     enableMod = () => {
         this._modDomElement.style.display = 'block';
-        //this._modDomDrag.onmousedown = this.startScaleDrag;
-        //document.body.addEventListener('keyup', this.ctrlUp);
-        //this._modDomDelete.onclick = this.deleteClick;
-    }
-
-    ctrlUp = (event) => {
-        if(event.code === 'ControlLeft') {
-            this.disableMod();
-            document.body.removeEventListener('keyup', this.ctrlUp);
-        }
     }
 
     disableMod() {
         this._modDomElement.style.display = 'none';
         this.stopScaleDrag();
-        //this._modDomDrag.onmousedown = null;
     }
 
     startDrag = (event) => {
@@ -201,8 +191,8 @@ export default class ImageEntity {
     }
 
     Destroy() {
-        document.body.removeEventListener('keyup', this.ctrlUp);
         this.domElement.onmousedown = null;
         this._modDomDelete.onclick = null;
+        this._modDomDrag.onmousedown = null;
     }
 }
