@@ -1,7 +1,15 @@
-export function createElement(tagName, id) {
-    const el = document.createElement(tagName);
-    if(id)el.id = id;
-    return el;
+export function createElement(type, properties, ...children) {
+    let element = document.createElement(type);
+    for (let prop in properties) {
+        element[prop] = properties[prop];
+    }
+    if (children.length > 0) {
+        for (let child of children) {
+            if (typeof child == "string") element.textContent = child;
+            else element.appendChild(child);
+        }
+    }
+    return element;
 }
 
 export const ImagePromise = (imageUrl) => new Promise((resolve, reject) =>{

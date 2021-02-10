@@ -18,27 +18,39 @@ module.exports = {
   plugins: [
     new webpack.ProgressPlugin(),
     new MiniCssExtractPlugin({ filename:'main.[contenthash].css' }),
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'Gif-wall 98: No jifs allowed',
+      favicon: './src/frontend/favicon.ico'
+    }),
   ],
 
   module: {
-    rules: [{
-      test: /\.(js|jsx)$/,
-      include: [path.resolve(__dirname, 'src/frontend')],
-      loader: 'babel-loader'
-    }, {
-      test: /.css$/,
+    rules: [
+      {
+        test:/\.ico$/,
+        loader: 'file-loader'
+      },
+      {
+        test: /\.(js|jsx)$/,
+        include: [path.resolve(__dirname, 'src/frontend')],
+        loader: 'babel-loader'
+      },
+      {
+        test: /.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          {
+            loader: "css-loader",
 
-      use: [{
-        loader: MiniCssExtractPlugin.loader
-      }, {
-        loader: "css-loader",
-
-        options: {
-          sourceMap: true
-        }
-      }]
-    }]
+            options: {
+              sourceMap: true
+            }
+          }
+        ]
+      }
+    ]
   },
   devtool: 'source-map',
   devServer: {

@@ -16,10 +16,10 @@ export default class ImageEntityManager {
         this.websocketClient = websocketClient;
         this.entities = new Map();
         this.center = {x:0, y:0}
-        this._dragOverlay = createElement('div', 'drag-overlay');
+        this._dragOverlay = createElement('div', {className:'drag-overlay'});
         document.body.append(this._dragOverlay);
         this._dragOverlay.onmousedown = this.startDrag;
-        this.domContainer = createElement('div', 'image-entity-container');
+        this.domContainer = createElement('div', {className:'image-entity-container'});
         document.body.append(this.domContainer);
         this.CalculatePlacementCenter();
         window.onresize = this.CalculatePlacementCenter;

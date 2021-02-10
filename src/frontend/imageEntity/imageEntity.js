@@ -22,26 +22,21 @@ export default class ImageEntity {
         this._websocket = websocket;
         this.fileHash = entityData.fileHash;
 
-        this.domElement = createElement('div');
-        this.domElement.classList.add('image-entity');
+        this.domElement = createElement('div',{className:'image-entity'});
         this.domElement.onmousedown = this.startDrag;
-
-        this._modDomElement = createElement('div');
-        this._modDomElement.classList.add('mod-overlay');
+        this._modDomElement = createElement(
+            'div',
+            {className:'mod-overlay'},
+            createElement('div', {className:'mod-window'})
+            );
         this.domElement.appendChild(this._modDomElement);
         this._modDomElement.onclick = this.toTopOfDisplay;
 
-        let modWindow = createElement('div');
-        modWindow.classList.add('mod-window');
-        this._modDomElement.appendChild(modWindow);
-
-        this._modDomDrag = createElement('div');
-        this._modDomDrag.classList.add('drag-icon');
+        this._modDomDrag = createElement('div', {className:'drag-icon'});
         this._modDomElement.appendChild(this._modDomDrag);
         this._modDomDrag.onmousedown = this.startScaleDrag;
 
-        this._modDomDelete = createElement('div');
-        this._modDomDelete.classList.add('delete-icon');
+        this._modDomDelete = createElement('div', {className:'delete-icon'});
         this._modDomElement.appendChild(this._modDomDelete);
         this._modDomDelete.onclick = this.deleteClick;
 
