@@ -5,7 +5,8 @@ export function createElement(type, properties, ...children) {
     }
     if (children.length > 0) {
         for (let child of children) {
-            if (typeof child == "string") element.textContent = child;
+            let type = typeof child;
+            if (type === "string" || type === "number") element.textContent = child;
             else element.appendChild(child);
         }
     }

@@ -10,13 +10,13 @@ export default class UploadManager {
         this.imageEntityManager = imageEntityManager;
         this.isLocked = false;
         window.addEventListener('dragenter', this.dragEnterEvent);
-        this.wrapper = createElement('div', 'dropbox-wrapper');
+        this.wrapper = createElement('div', {id: 'dropbox-wrapper'});
 
         let wrapText = createElement('p')
         wrapText.innerHTML = 'Upload image';
         this.wrapper.appendChild(wrapText);
 
-        this.dropBox = createElement('input', 'dropbox');
+        this.dropBox = createElement('input', {id:'dropbox'});
         this.dropBox.type = 'file';
         this.wrapper.appendChild(this.dropBox);
 
