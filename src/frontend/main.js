@@ -6,8 +6,8 @@ import Header from './header/Header'
 
 window.onload = async function () {
     const webSocketClient = new WebSocketClient();
-    new Header(webSocketClient);
     const imageEntityManager = new ImageEntityManager(webSocketClient);
-    await imageEntityManager.start();
     new UploadManager(imageEntityManager);
+    new Header(webSocketClient);
+    await imageEntityManager.start();
 }

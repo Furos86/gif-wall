@@ -62,7 +62,6 @@ export default class WebSocketServerService {
     }
 
     _sendEvent(event) {
-        console.log('sending' + event.type);
         const eventString = JSON.stringify(event);
         this.wss.clients.forEach( (client) => {
             if(client.readyState !== WebSocket.OPEN) return null;

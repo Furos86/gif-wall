@@ -25,7 +25,6 @@ export default class gifWall {
 
         try{
             await databaseService.start();
-
         } catch (error) {
             console.log(error);
         }

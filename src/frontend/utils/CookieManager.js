@@ -30,7 +30,6 @@ export default class CookieManager {
 	set(key, value) {
 		let domain = (this.domain !== undefined) ? "domain="+this.domain+";":"";
 		document.cookie = key+"="+value+"; path=/;" + domain;
-		console.log(document.cookie);
 	}
 
 	delete(key) {
