@@ -5,6 +5,7 @@
     opacity: 0;
 }
 #dropbox-wrapper {
+    box-sizing: border-box;
     border: #e9e9e9 dashed 3px;
     position: absolute;
     width:100%;
