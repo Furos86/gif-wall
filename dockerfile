@@ -2,10 +2,10 @@ FROM node:lts-alpine as build
 WORKDIR /app
 COPY ./package.json ./
 COPY ./package-lock.json ./
-COPY ./babel.config.json ./
-COPY ./webpack.config.js ./
 RUN npm install
 COPY ./src/ ./src
+COPY ./babel.config.json ./
+COPY ./webpack.config.js ./
 RUN npm run build:frontend
 
 FROM node:lts-alpine

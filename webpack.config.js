@@ -20,14 +20,14 @@ module.exports = {
     new MiniCssExtractPlugin({ filename:'main.[contenthash].css' }),
     new HtmlWebpackPlugin({
       title: 'Gif-wall 98: No jifs allowed',
-      favicon: './src/frontend/favicon.ico'
+      favicon: './src/frontend/favicon.png'
     }),
   ],
 
   module: {
     rules: [
       {
-        test:/\.ico$/,
+        test:/\.png$/,
         loader: 'file-loader'
       },
       {
