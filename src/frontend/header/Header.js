@@ -6,16 +6,75 @@ export default class Header {
 	headerTimeout;
 	headerCtrlDown = false;
 
-	constructor(webSocketClient) {
-		const cm = new CookieManager();
+	constructor(webSocketClient) {const cm = new CookieManager();
 		const color = cm.get("backgroundColor") || "#3c5351";
+		const displayAbout = cm.get("displayAbout") || "true";
 		const connectedTarget = createElement("div", { className:"connectedTarget" }, 0);
 
 		document.body.style.backgroundColor = color;
 		this.hideTaskBar = this.hideTaskBar.bind(this);
 
+		let about = createElement("div", { className:"about container" },
+			createElement("div", { className:"window" },
+				createElement("div", { className:"title" },
+					createElement("div", { }, "GIFWall" ),
+					createElement("div", { className:"bold" }, "98" )
+				),
+				createElement("div", { className:"content" },
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"i" }, "Welcome to the GIFWall, enjoy your eye-aids!")
+					),
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"h" }, "Uploading your oh so \"funny\" gif (jpg or png)" ),
+						createElement("div", { className:"t" }, "Drag 'n drop your image from the desktop into the GIFWall app")
+					),
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"h" },	"Moving an image" ),
+						createElement("div", { className:"t" }, "Click on the image and drag it around")
+					),
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"h" },	"Scaling an image" ),
+						createElement("div", { className:"t" }, "Press"),
+						createElement("div", { className:"icon" }, "CTRL"),
+						createElement("div", { className:"t" }, "and you see windows appear! In the bottom right hand corner you see"),
+						createElement("div", { className:"icon" }, "◲"),
+						createElement("div", { className:"t" }, "drag it...NOW!")
+					),
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"h" }, "Removing an image" ),
+						createElement("div", { className:"t" }, "You're still pressing "),
+						createElement("div", { className:"icon" }, "CTRL"),
+						createElement("div", { className:"t" }, "right? good. You see the"),
+						createElement("div", { className:"icon" }, "🞬"),
+						createElement("div", { className:"t" }, "if you press it the gif will be removed and lost for all eternity")
+					),
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"h" }, "brining an image to the front"),
+						createElement("div", { className:"t" }, "Is your image covered by other images, do you not like that? Well we've got good news, click on it and it will be brought to the front again!" )
+					),
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"h" },	"Moving the whole canvas"),
+						createElement("div", { className:"t" }, "Press"),
+						createElement("div", { className:"icon" }, "SPACEBAR"),
+						createElement("div", { className:"t" }, "and see a magic hand appear! You can now drag yourself away from the horrid gifs other people have uploaded" )
+					),
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"t" }, "You can find this help screen under the start button on the header")
+					)
+
+				),
+				createElement("div", { className:"button close", onclick:() => { about.style.display = "none" } }, "Dismiss")
+			)
+		);
+
+		if (displayAbout === "true") {
+			cm.set("displayAbout", "false");
+		} else {
+			about.style.display = "none";
+		}
+
 		let header = createElement("div", { className:"header container down" },
-			createElement("div", { className:"button start" }),
+			createElement("div", { className:"button start", onclick:() => { about.style.display = "flex" } }),
 			createElement("div", { className:"bar" },
 				createElement("div", { className:"title" },
 					createElement("div", {}, "GIFWall"),
@@ -26,16 +85,13 @@ export default class Header {
 					createElement("input", {
 						type:"color",
 						value:color,
-						oninput:(evt) => {
-							document.body.style.backgroundColor = evt.target.value;
-							cm.set("backgroundColor", evt.target.value)
-						}
+						oninput:(evt) => { document.body.style.backgroundColor = evt.target.value; cm.set("backgroundColor", evt.target.value) }
 					}),
 					createElement("div", { className:"name" }, "People connected:"),
 					connectedTarget
 				)
 			)
-		)
+		);
 
 		window.addEventListener("keydown", (evt) => {
 			if (evt.key === "Control") {
@@ -61,6 +117,7 @@ export default class Header {
 		}
 
 		document.body.appendChild(header);
+		document.body.appendChild(about);
 		this.hideTaskBar(header, 3000);
 
 		webSocketClient.on('viewerCountUpdate', (count) => {

@@ -28,7 +28,10 @@ module.exports = {
     rules: [
       {
         test:/\.png$/,
-        loader: 'file-loader'
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        }
       },
       {
         test: /\.(js|jsx)$/,
@@ -39,7 +42,10 @@ module.exports = {
         test: /.css$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader
+            loader: MiniCssExtractPlugin.loader,
+            options:{
+              publicPath:'/'
+            }
           },
           {
             loader: "css-loader",
