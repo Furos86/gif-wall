@@ -15,8 +15,6 @@ export default class WebSocketServerService {
         this.wss.clients.forEach(ws => {
             if (ws.isAlive === false){
                 ws.terminate();
-                this.totalViewers--;
-                this._updateViewerCount();
                 return;
             }
             ws.isAlive = false;
