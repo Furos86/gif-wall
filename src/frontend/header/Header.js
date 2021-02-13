@@ -49,8 +49,10 @@ export default class Header {
 						createElement("div", { className:"t" }, "if you press it the gif will be removed and lost for all eternity")
 					),
 					createElement("div", { className:"sub" },
-						createElement("div", { className:"h" }, "brining an image to the front"),
-						createElement("div", { className:"t" }, "Is your image covered by other images, do you not like that? Well we've got good news, click on it and it will be brought to the front again!" )
+						createElement("div", { className:"h" }, "bringing an image to the front"),
+						createElement("div", { className:"t" }, "Is your image covered by other images? Do you not like that? Well we've got good news, press" ),
+						createElement("div", { className:"icon" }, "CTRL"),
+						createElement("div", { className:"t" }, "click on the image and it will be brought to the front again!" )
 					),
 					createElement("div", { className:"sub" },
 						createElement("div", { className:"h" },	"Moving the whole canvas"),
