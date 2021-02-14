@@ -2,11 +2,13 @@ import axios from 'axios';
 import {createElement} from './utils/domUtils';
 
 export default class UploadManager {
-    isLocked
-    dropBox
-    wrapper
-    imageEntityManager
-    constructor(imageEntityManager) {
+    isLocked;
+    dropBox;
+    wrapper;
+    imageEntityManager;
+    authManager;
+    constructor(imageEntityManager, authManager) {
+        this.authManager = authManager;
         this.imageEntityManager = imageEntityManager;
         this.isLocked = false;
         window.addEventListener('dragenter', this.dragEnterEvent);
@@ -50,6 +52,8 @@ export default class UploadManager {
         form.append('file', file);
         const parsedPosition = JSON.stringify(this.imageEntityManager.center);
         form.append('position', parsedPosition);
+        console.log(this.authManager.sessionId);
+        form.append('sessionId', this.authManager.sessionId);
         try {
             const response = await axios.post('/upload',form);
             await this.imageEntityManager.CreateEntity(response.data)

@@ -13,7 +13,8 @@ export default class Routes {
         const uploadMulter = multer().array('file');
         this.router.post('/upload', uploadMulter, asyncHandler(controller.Upload));
         this.router.get('/image/:fileHash', asyncHandler(controller.Image));
-        this.router.get('/entities', asyncHandler(controller.Entities))
+        this.router.get('/entities', asyncHandler(controller.Entities));
+        this.router.post('/authenticate', asyncHandler(controller.Authenticate));
     }
 
 }

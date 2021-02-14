@@ -6,13 +6,17 @@ export default class Header {
 	headerTimeout;
 	headerCtrlDown = false;
 
-	constructor(webSocketClient) {const cm = new CookieManager();
+	constructor(webSocketClient, authManager) {
+		const cm = new CookieManager();
 		const color = cm.get("backgroundColor") || "#3c5351";
 		const displayAbout = cm.get("displayAbout") || "true";
 		const connectedTarget = createElement("div", { className:"connectedTarget" }, 0);
 
 		document.body.style.backgroundColor = color;
 		this.hideTaskBar = this.hideTaskBar.bind(this);
+
+		let message = createElement("div", { className:"message" });
+		let password = createElement("input", { type:"password" });
 
 		let about = createElement("div", { className:"about container" },
 			createElement("div", { className:"window" },
@@ -62,9 +66,22 @@ export default class Header {
 					),
 					createElement("div", { className:"sub" },
 						createElement("div", { className:"t" }, "You can find this help screen under the start button on the header")
+					),
+					createElement("div", { className:"sub" },
+						createElement("div", { className:"label" }, "password"),
+						password,
+						message
 					)
-
 				),
+				createElement("div", { className:"button login", onclick:async () => {
+						if (password.value !== "") {
+							let res = await authManager.requestSessionKey(password.value);
+							if (res) {
+								about.style.display = "none";
+								message.textContent = "";
+							} else message.textContent = "password incorrect";
+						} else message.textContent = "please input password";
+					} }, "Login"),
 				createElement("div", { className:"button close", onclick:() => { about.style.display = "none" } }, "Dismiss")
 			)
 		);

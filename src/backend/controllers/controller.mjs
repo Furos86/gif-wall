@@ -1,4 +1,5 @@
 import FileType from 'file-type';
+import Configuration from '../configuration.mjs';
 
 const exceptedFIleTypes = [
     'png',
@@ -16,6 +17,12 @@ export default class Controller {
     }
     Upload = async (request, response) => {
         const position = JSON.parse(request.body.position);
+        const sessionId = request.body.sessionId;
+        if(!this.webSocketServerService.isAuth(sessionId)) {
+            response.status(401).send('login first');
+            return;
+        }
+
         const file = request.files[0];
         const fileType = await FileType.fromBuffer(file.buffer);
         if(!fileType || exceptedFIleTypes.indexOf(fileType.ext) === -1) {
@@ -41,5 +48,16 @@ export default class Controller {
             throw new Error(`image ${fileHash} does not exist :(`)
         }
         response.send(buffer);
+    }
+
+    Authenticate = async(request, response) => {
+        if(!request.body) response.status(401).send();
+        const loginData = request.body;
+        if(loginData.password && loginData.password === Configuration.authPassword) {
+            this.webSocketServerService.authSession(loginData.sessionId);
+            response.send('Welcome :D');
+        } else {
+            if(!request.data) response.status(401).send('wrong password >:(');
+        }
     }
 }

@@ -72,6 +72,9 @@ module.exports = {
       },
       '/entities': {
         target:'http://localhost:80'
+      },
+      '/authenticate': {
+        target:'http://localhost:80'
       }
     }
   }

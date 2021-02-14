@@ -1,7 +1,9 @@
 export default class WebSocketClient {
     _updateCallbacks = [];
     _callbacks = new Map();
-    webSocket
+    _awaitInit = true;
+    sessionId;
+    webSocket;
     constructor() {
         let loc = window.location, new_uri;
         if (loc.protocol === "https:") {
@@ -12,10 +14,17 @@ export default class WebSocketClient {
         new_uri += "//" + loc.hostname;
         this.webSocket = new WebSocket(`${new_uri}:8080`);
         this.webSocket.onmessage = this._messageSwitch;
+        this.webSocket.onopen = () => {
+            this.webSocket.send(JSON.stringify({type:'init'}));
+        }
     }
 
     _messageSwitch = (message) => {
         const event = JSON.parse(message.data);
+        if(this._awaitInit && event.type === 'init') {
+            this.sessionId = event.data.sessionId;
+            this._awaitInit = false;
+        }
         if(!this._callbacks.has(event.type)) return null;
         this._callbacks.get(event.type).forEach(cb => cb(event.data))
     }
