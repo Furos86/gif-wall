@@ -23,4 +23,9 @@ export default class FileStoreService {
     async remove(id) {
         return await fsPromises.unlink(path.join(this.directory, id));
     }
+
+    async hashExist(hash) {
+        const files = await fsPromises.readdir(this.directory);
+        return files.some(file => file === hash);
+    }
 }

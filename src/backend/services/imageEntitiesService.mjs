@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+
 export default class ImageEntitiesService {
     displayOrder = [];
 
@@ -22,7 +23,7 @@ export default class ImageEntitiesService {
     async Create(position, file) {
         try {
             const hash = this.generateHash(file.buffer);
-            const storeFile = await this.HashExists(hash);
+            const hashExist = await this.fileStore.hashExist(hash);
             const imageEntity = this.database.models.ImageEntity.build({
                 fileHash: hash,
                 x: position.x,
@@ -34,7 +35,7 @@ export default class ImageEntitiesService {
             } catch (error) {
                 console.log(error)
             }
-            if (storeFile) await this.fileStore.Store(hash, file.buffer);
+            if (!hashExist) await this.fileStore.Store(hash, file.buffer);
             //after create, emit update event
             this.displayOrder.push(imageEntity.id);
             await this._storeDisplayOrder();
@@ -93,15 +94,6 @@ export default class ImageEntitiesService {
         entity.z = entityUpdateData.z;
         entity.scale = entityUpdateData.scale;
         await entity.save();
-    }
-
-    async HashExists(hash) {
-        const data = await this.database.models.ImageEntity.findOne({
-            where: {
-                fileHash:hash
-            }
-        })
-        return data === null;
     }
 
     EntitiesInArea(position, areaSize) {
