@@ -9,7 +9,6 @@ export default class ImageEntityManager {
     entities;
     websocketClient;
     isMod;
-    _dragOverlay;
     _dragOffset = {x:0, y:0};
     constructor(websocketClient) {
         this.isMod = false;
@@ -48,19 +47,14 @@ export default class ImageEntityManager {
         event.preventDefault();
         switch(event.type) {
             case 'mousedown':
-                this.activeContainerDrag();
                 this.startDrag(event);
                 break;
             case 'mouseup':
-                this.stopContainerDrag();
+                this.stopDrag();
                 break;
             default:
                 return;
         }
-    }
-
-    activeContainerDrag() {
-        //this._dragOverlay.style.display = 'block';
     }
 
     startDrag = (event) => {
@@ -83,11 +77,6 @@ export default class ImageEntityManager {
     drag = (event) => {
         this.domContainer.style.left = (event.clientX - this._dragOffset.x) + 'px';
         this.domContainer.style.top  = (event.clientY - this._dragOffset.y) + 'px';
-    }
-
-    stopContainerDrag() {
-        this._dragOverlay.style.display = 'none';
-        this.stopDrag();
     }
 
    CreateEntity = async(entityData) => {
