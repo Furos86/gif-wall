@@ -16,15 +16,14 @@ export default class ImageEntityManager {
         this.websocketClient = websocketClient;
         this.entities = new Map();
         this.center = {x:0, y:0}
-        this._dragOverlay = createElement('div', {id:'drag-overlay'});
-        document.body.append(this._dragOverlay);
-        this._dragOverlay.onmousedown = this.startDrag;
         this.domContainer = createElement('div', {id:'image-entity-container'});
         document.body.append(this.domContainer);
         this.CalculatePlacementCenter();
         window.onresize = this.CalculatePlacementCenter;
         document.body.addEventListener('keydown', this.keyPressEventHandler);
         document.body.addEventListener('keyup', this.keyPressEventHandler);
+        document.addEventListener('mousedown', this.globalMousePressEventHandler)
+        document.addEventListener('mouseup', this.globalMousePressEventHandler)
         websocketClient.on('updateEntity',this.UpdateEntity);
         websocketClient.on('createEntity', this.CreateEntity);
         websocketClient.on('deleteEntity', this.DeleteEntity);
@@ -32,11 +31,6 @@ export default class ImageEntityManager {
     }
 
     keyPressEventHandler = (event) => {
-        if(event.code === 'Space') {
-            if (event.type === 'keydown') this.activeContainerDrag();
-            if (event.type === 'keyup') this.stopContainerDrag();
-            return null;
-        }
         if(event.code === 'ControlLeft') {
             if(event.type === 'keydown') {
                 this.entities.forEach(entity => entity.enableMod())
@@ -49,16 +43,32 @@ export default class ImageEntityManager {
         }
     }
 
+    globalMousePressEventHandler = (event) => {
+        if(event.button !== 1) return;
+        event.preventDefault();
+        switch(event.type) {
+            case 'mousedown':
+                this.activeContainerDrag();
+                this.startDrag(event);
+                break;
+            case 'mouseup':
+                this.stopContainerDrag();
+                break;
+            default:
+                return;
+        }
+    }
+
     activeContainerDrag() {
-        this._dragOverlay.style.display = 'block';
+        //this._dragOverlay.style.display = 'block';
     }
 
     startDrag = (event) => {
-        this._dragOffset.x = event.offsetX - this.domContainer.offsetLeft;
-        this._dragOffset.y = event.offsetY - this.domContainer.offsetTop;
+        this._dragOffset.x = event.clientX - this.domContainer.offsetLeft;
+        this._dragOffset.y = event.clientY - this.domContainer.offsetTop;
         window.onmousemove = this.drag;
         window.onmouseup = this.stopDrag;
-        this._dragOverlay.style.cursor = 'grabbing';
+        document.body.style.cursor = 'grabbing';
     }
 
     stopDrag = () => {
@@ -67,7 +77,7 @@ export default class ImageEntityManager {
         this._dragOffset.x = 0;
         this._dragOffset.y = 0;
         this.CalculatePlacementCenter();
-        this._dragOverlay.style.cursor = 'grab';
+        document.body.style.cursor = 'default';
     }
 
     drag = (event) => {

@@ -11,6 +11,7 @@ services:
       - MAKE_DATABASE=true
       - FILE_STORE_LOCATION=./file_store
       - DATABASE_HOST=database
+      - AUTH_PASS=jifWall
     ports:
       - 80:80
       - 8080:8080

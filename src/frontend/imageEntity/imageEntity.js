@@ -113,6 +113,7 @@ export default class ImageEntity {
     }
 
     startDrag = (event) => {
+        if(event.button !== 0) return;
         this.domElement.classList.remove('position-ease');
         if(this._parent.isMod) return;
 
