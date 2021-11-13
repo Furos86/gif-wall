@@ -23,7 +23,7 @@ export default class ImageEntity {
         this.fileHash = entityData.fileHash;
 
         this.domElement = createElement('div',{className:'image-entity'});
-        this.domElement.onmousedown = this.startDrag;
+        this.domElement.addEventListener('mousedown', this.startDrag);
         this._modDomElement = createElement(
             'div',
             {className:'mod-overlay'},
@@ -32,18 +32,26 @@ export default class ImageEntity {
         this.domElement.appendChild(this._modDomElement);
         this._modDomElement.onclick = this.toTopOfDisplay;
 
-        this._modDomDrag = createElement('div', {className:'drag-icon'});
-        this._modDomElement.appendChild(this._modDomDrag);
-        this._modDomDrag.onmousedown = this.startScaleDrag;
+        this._modDomDrag = this.addModElement({className:'drag-icon'}, 'mousedown', this.startScaleDrag);
 
-        this._modDomDelete = createElement('div', {className:'delete-icon'});
-        this._modDomElement.appendChild(this._modDomDelete);
-        this._modDomDelete.onclick = this.deleteClick;
+        this._modDomDelete = this.addModElement({className:'delete-icon'}, 'click', this.deleteClick);
+
+        this.addModElement({className:'toBack-icon'}, 'click');
+        this.addModElement({className:'back-icon'}, 'click');
+        this.addModElement({className:'forward-icon'}, 'click');
+        this.addModElement({className:'toFront-icon'}, 'click');
 
 
         this.position = {x:entityData.x, y:entityData.y};
         this.depth = entityData.z;
         this.scale = entityData.scale;
+    }
+
+    addModElement(elementProperties, eventType, eventFunction) {
+        let modElement = createElement('div', elementProperties);
+        this._modDomElement.appendChild(modElement);
+        modElement.addEventListener(eventType, eventFunction);
+        return modElement;
     }
 
     Load = async() => {
@@ -183,6 +191,7 @@ export default class ImageEntity {
     }
 
     deleteClick = () => {
+        console.log('hallo')
         this._websocket.DeleteEntity(this.id);
     }
 

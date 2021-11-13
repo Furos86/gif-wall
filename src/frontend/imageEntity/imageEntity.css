@@ -59,6 +59,90 @@
     outline-offset: -4px;
 }
 
+.toBack-icon {
+    position: absolute;
+    width: 23px;
+    height: 17px;
+    top: -26px;
+    right: 114px;
+    background: #e2dacc;
+    border: 2px outset;
+}
+
+.toBack-icon::before {
+    content: "⭰";
+    position: absolute;
+    line-height: 20px;
+    font-size: 1.6em;
+    width: 100%;
+    height: 23px;
+    margin-top: -0.03em;
+    left: 0.02em;
+}
+
+.back-icon {
+    position: absolute;
+    width: 23px;
+    height: 17px;
+    top: -26px;
+    right: 86px;
+    background: #e2dacc;
+    border: 2px outset;
+}
+
+.back-icon::before {
+    content: "⭠";
+    position: absolute;
+    line-height: 20px;
+    font-size: 1.6em;
+    width: 100%;
+    height: 23px;
+    margin-top: -0.03em;
+    left: 0.01em;
+}
+
+.forward-icon {
+    position: absolute;
+    width: 23px;
+    height: 17px;
+    top: -26px;
+    right: 58px;
+    background: #e2dacc;
+    border: 2px outset;
+}
+
+.forward-icon::before {
+    content: "⭢";
+    position: absolute;
+    line-height: 20px;
+    font-size: 1.6em;
+    width: 100%;
+    height: 23px;
+    margin-top: -0.03em;
+    left: -0.03em;
+}
+
+.toFront-icon {
+    position: absolute;
+    width: 23px;
+    height: 17px;
+    top: -26px;
+    right: 30px;
+    background: #e2dacc;
+    border: 2px outset;
+}
+
+.toFront-icon::before {
+    content: "⭲";
+    position: absolute;
+    line-height: 20px;
+    font-size: 1.6em;
+    width: 100%;
+    height: 23px;
+    margin-top: -0.03em;
+    left: -0.03em;
+}
+
 .drag-icon {
     position: absolute;
     width: 26px;
