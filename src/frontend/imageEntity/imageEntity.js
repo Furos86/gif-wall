@@ -30,16 +30,15 @@ export default class ImageEntity {
             createElement('div', {className:'mod-window'})
             );
         this.domElement.appendChild(this._modDomElement);
-        this._modDomElement.onclick = this.toTopOfDisplay;
 
         this._modDomDrag = this.addModElement({className:'drag-icon'}, 'mousedown', this.startScaleDrag);
 
         this._modDomDelete = this.addModElement({className:'delete-icon'}, 'click', this.deleteClick);
 
-        this.addModElement({className:'toBack-icon'}, 'click');
-        this.addModElement({className:'back-icon'}, 'click');
-        this.addModElement({className:'forward-icon'}, 'click');
-        this.addModElement({className:'toFront-icon'}, 'click');
+        this.addModElement({className:'toBack-icon'}, 'click', this.toBack);
+        this.addModElement({className:'back-icon'}, 'click', this.backward);
+        this.addModElement({className:'forward-icon'}, 'click', this.forward);
+        this.addModElement({className:'toFront-icon'}, 'click', this.toFront);
 
 
         this.position = {x:entityData.x, y:entityData.y};
@@ -103,8 +102,29 @@ export default class ImageEntity {
         this.domElement.style.height = `${absoluteHeight}px`;
     }
 
-    toTopOfDisplay = () => {
-        this._websocket.updateEntityDisplayOrder(this.id);
+    toBack = () => {
+        this._websocket.updateEntityDisplayOrder({
+            id:this.id,
+            action:'toBack'
+        });
+    }
+
+    backward = () => {
+        this._websocket.updateEntityDisplayOrder({
+            id:this.id,
+            action:'backward'
+        });
+    }
+
+    forward = () => {
+        this._websocket.updateEntityDisplayOrder({
+            id:this.id,
+            action:'forward'
+        });
+    }
+
+    toFront = () => {
+        this._websocket.updateEntityDisplayOrder({id:this.id, action:'toTop'});
     }
 
     show() {

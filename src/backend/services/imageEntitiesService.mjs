@@ -50,12 +50,29 @@ export default class ImageEntitiesService {
         }
     }
 
-    async UpdateDisplayOrder(id) {
-        const idIndex = this.displayOrder.indexOf(id);
+    async UpdateDisplayOrder(data) {
+        const idIndex = this.displayOrder.indexOf(data.id);
         if(idIndex === -1) return;
-        this.displayOrder.splice(idIndex,1);
-        this.displayOrder.push(id);
-        await this._storeDisplayOrder()
+        switch(data.action) {
+            case 'toBack':
+                this.displayOrder.splice(0, 0, data.id);
+                break;
+            case 'backward':
+                if(idIndex-1 < 0) break;
+                this.displayOrder.splice(idIndex, 1);
+                this.displayOrder.splice(idIndex-1, 0, data.id);
+                break;
+            case 'forward':
+                if(idIndex === this.displayOrder.length -1) break;
+                this.displayOrder.splice(idIndex, 1);
+                this.displayOrder.splice(idIndex+1, 0, data.id);
+                break;
+            case 'toTop':
+                this.displayOrder.splice(idIndex,1);
+                this.displayOrder.push(data.id);
+                break;
+        }
+        await this._storeDisplayOrder();
     }
 
     async _storeDisplayOrder() {

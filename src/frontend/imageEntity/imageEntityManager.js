@@ -96,10 +96,33 @@ export default class ImageEntityManager {
         this.center.y = y;
     }
 
-    UpdateEntitiesDisplayOrder = (id) => {
-        const entity = this.entities.get(id);
-        this.domContainer.removeChild(entity.domElement);
-        this.domContainer.appendChild(entity.domElement);
+    UpdateEntitiesDisplayOrder = (data) => {
+        const domElement = this.entities.get(data.id).domElement;
+        let beforeTarget = null;
+        switch(data.action) {
+            case 'toBack':
+                beforeTarget = this.domContainer.firstChild;
+                break;
+            case 'backward':
+                beforeTarget = this.findBeforeTarget(domElement, -1);
+                break;
+            case 'forward':
+                beforeTarget = this.findBeforeTarget(domElement, 2);
+                break;
+            case 'toTop':
+                break;
+        }
+
+
+        this.domContainer.insertBefore(domElement, beforeTarget);
+    }
+
+    findBeforeTarget(domElement, searchIndex) {
+        let arr = Array.from(this.domContainer.childNodes);
+        let beforeTargetIndex = arr.indexOf(domElement)+searchIndex;
+        if(beforeTargetIndex >= arr.length) return null;
+        if(beforeTargetIndex <= 0) return arr[0];
+        return arr[beforeTargetIndex];
     }
 
     UpdateEntity = (entityData) => {

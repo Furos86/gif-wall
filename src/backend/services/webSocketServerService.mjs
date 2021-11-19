@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 import {v1 as uuidv1} from 'uuid'
+import Configuration from '../configuration.mjs';
 
 export default class WebSocketServerService {
     aliveInterval;
@@ -36,6 +37,7 @@ export default class WebSocketServerService {
     }
 
     isAuth(sessionId) {
+        if(Configuration.nodeEnv === 'development') return true;
         return this.sessions.has(sessionId);
     }
 
@@ -79,6 +81,7 @@ export default class WebSocketServerService {
     }
 
     _checkAuth(client) {
+        if(Configuration.nodeEnv === 'development') return true;
         if(!client.isAuth) {
             this._sendEvent({
                 type:'notAuth'

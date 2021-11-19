@@ -34,8 +34,8 @@ export default class WebSocketClient {
         this._callbacks.get(eventType).push(callback);
     }
 
-    updateEntityDisplayOrder(id) {
-        this.webSocket.send(JSON.stringify({type:'updateEntitiesDisplayOrder', data:id}))
+    updateEntityDisplayOrder(data) {
+        this.webSocket.send(JSON.stringify({type:'updateEntitiesDisplayOrder', data: data}))
     }
 
     UpdateEntity(entityUpdateData) {

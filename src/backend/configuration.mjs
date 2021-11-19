@@ -9,4 +9,5 @@ export default class Configuration {
     static makeDatabase = get('MAKE_DATABASE').default("false").asBool();
     static localFileStoreLocation = get('FILE_STORE_LOCATION').default('/file_store').asString();
     static authPassword = get("AUTH_PASS").default('admin').asString();
+    static nodeEnv = get("NODE_ENV").asString();
 }
