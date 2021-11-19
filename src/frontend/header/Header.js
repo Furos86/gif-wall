@@ -60,9 +60,9 @@ export default class Header {
 					),
 					createElement("div", { className:"sub" },
 						createElement("div", { className:"h" },	"Moving the whole canvas"),
-						createElement("div", { className:"t" }, "Press"),
-						createElement("div", { className:"icon" }, "SPACEBAR"),
-						createElement("div", { className:"t" }, "and see a magic hand appear! You can now drag yourself away from the horrid gifs other people have uploaded" )
+						createElement("div", { className:"t" }, "Click"),
+						createElement("div", { className:"icon" }, "MIDDLE-MOUSE BUTTON"),
+						createElement("div", { className:"t" }, "You can now drag yourself away from the horrid gifs other people have uploaded!" )
 					),
 					createElement("div", { className:"sub" },
 						createElement("div", { className:"t" }, "You can find this help screen under the start button on the header")
