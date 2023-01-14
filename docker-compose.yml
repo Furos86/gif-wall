@@ -3,15 +3,18 @@ services:
   database:
     restart: always
     image: mysql:latest
+    volumes:
+      - ./storage/mysql:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=password
   server:
     image: gifwall
     environment:
       - MAKE_DATABASE=true
-      - FILE_STORE_LOCATION=./file_store
       - DATABASE_HOST=database
       - AUTH_PASS=jifWall
+    volumes:
+      - ./storage/file_store:/file_store
     ports:
       - 80:80
       - 8080:8080

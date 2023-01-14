@@ -13,6 +13,6 @@ WORKDIR /app
 COPY ./package.json ./
 COPY ./package-lock.json ./
 RUN npm install --production
-copy --from=build app/src/backend ./
+COPY --from=build app/src/backend ./
 COPY --from=build app/dist/front-end ./static
 CMD node index.mjs
