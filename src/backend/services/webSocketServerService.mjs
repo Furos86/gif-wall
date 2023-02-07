@@ -1,4 +1,4 @@
-import WebSocket from 'ws';
+import WebSocket, {WebSocketServer} from 'ws';
 import {v1 as uuidv1} from 'uuid'
 import Configuration from '../configuration.mjs';
 
@@ -10,7 +10,7 @@ export default class WebSocketServerService {
         this.sessions = new Map();
         this.totalViewers = 0;
         this.imageEntityService = imageEntityService;
-        this.wss = new WebSocket.Server({port: 8080});
+        this.wss = new WebSocketServer({port: 8080});
         this.wss.on('connection', this._onServerConnection);
         this.aliveInterval = setInterval(this._aliveCheck, 30000)
     }

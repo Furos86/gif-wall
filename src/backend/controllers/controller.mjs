@@ -1,4 +1,4 @@
-import FileType from 'file-type';
+import * as FileType from 'file-type';
 import Configuration from '../configuration.mjs';
 
 const exceptedFIleTypes = [
@@ -24,7 +24,7 @@ export default class Controller {
         }
 
         const file = request.files[0];
-        const fileType = await FileType.fromBuffer(file.buffer);
+        const fileType = await FileType.fileTypeFromBuffer(file.buffer);
         if(!fileType || exceptedFIleTypes.indexOf(fileType.ext) === -1) {
             response.status(415).send();
             return;
